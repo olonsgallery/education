@@ -1,617 +1,632 @@
-// ...existing code moved here and adapted to export for Node + browser...
-
-/*
-  This file contains:
-  - const units = [...]  // full units + scenes (each scene has "audio": "assets/audio/units/unit{N}/scene{M}_narration.mp3")
-  - renderUnits(), openScene(), handleInteraction(), etc.
-  - At end: if (typeof window !== 'undefined') window.units = units;
-            if (typeof module !== 'undefined' && module.exports) module.exports = units;
-*/
-
-// NOTE: paste the full units data you had in units.html here. Each scene must include:
-//   audio: "assets/audio/units/unit{N}/scene{M}_narration.mp3"
-// Example of a single unit/scene entry (repeat for all scenes):
+// Full units dataset (5 units × 8 scenes) with narration audio paths.
+// Update audio files at: assets/audio/units/unit{N}/scene{M}_narration.mp3
 const units = [
 	{
 		id: 1,
 		title: "My Morning Routine",
 		emoji: "🌞",
 		vocab: {
-			Verbs: ["wake up","stretch","yawn","brush","wash","get dressed","pack","eat","walk","run"],
-			Nouns: ["alarm clock","bed","bathroom","toothbrush","towel","breakfast","bag","uniform","shoes"],
-			Expressions: ["Good morning!","I'm coming!","Hurry up!","I'm ready!","Let's go!"]
+			Verbs: ["wake up", "stretch", "yawn", "brush", "wash", "get dressed", "pack", "eat", "walk", "run"],
+			Nouns: ["alarm clock", "bed", "bathroom", "toothbrush", "towel", "breakfast", "bag", "uniform", "shoes"],
+			Expressions: ["Good morning!", "I'm coming!", "Hurry up!", "I'm ready!", "Let's go!"]
 		},
 		scenes: [
 			{
 				id: 1,
 				title: "Wake Up, Fiela!",
-				setting: "Bedroom with morning sunlight streaming through window",
+				setting: "Bedroom with morning sunlight",
 				vocabFocus: "wake up, stretch, yawn, alarm clock",
 				narrative: "The alarm clock rings loudly. Ring! Ring! Ring! Fiela slowly opens her eyes. She stretches her arms and lets out a big yawn. Her room is bright and warm. The sun is shining through the window. She whispers softly, 'Good morning…'",
 				dialog: [{who:"Mom",text:"Fiela, wake up! It's time for school!"},{who:"Fiela",text:"Okay, Mom… I'm waking up."}],
 				image: "🏠",
-				interactive: ["🔔 Ring the alarm","😴 Yawn sound","📖 Learn: stretch"],
+				interactive: ["🔔 Ring the alarm","😴 Yawn sound","📖 Word: stretch"],
 				keyPhrase: "Good morning",
 				audio: "assets/audio/units/unit1/scene1_narration.mp3"
 			},
 			{
 				id: 2,
 				title: "To the Bathroom!",
-				setting: "Bathroom with toothbrush and running water",
+				setting: "Bathroom with toothbrush, soap, running water",
 				vocabFocus: "brush, wash, toothbrush, water, towel",
 				narrative: "Fiela walks to the bathroom. She picks up her blue toothbrush. She brushes her teeth carefully. Brush, brush, brush! Then she washes her face with cool water. It feels fresh. She dries her face with a soft towel.",
 				dialog: [{who:"Fiela",text:"The water is cold!"},{who:"Mom (from outside)",text:"Don't forget your ears!"}],
 				image: "🚿",
-				interactive: ["💧 Water splashing","🪥 Brush animation","📖 Learn: fresh"],
-				keyPhrase: "The water is cold",
+				interactive: ["💧 Click Water", "🪥 Click Toothbrush", "📖 Dictionary: Fresh"],
+				keyPhrase: "I'm washing my face",
 				audio: "assets/audio/units/unit1/scene2_narration.mp3"
 			},
 			{
 				id: 3,
 				title: "Shower Time",
-				setting: "Shower with warm water and soap bubbles",
+				setting: "Shower with foam soap, water sound",
 				vocabFocus: "bath, soap, bubbles, clean",
 				narrative: "Fiela steps into the shower. Warm water falls gently. She rubs soap on her arms and legs. Bubbles float in the air. She feels clean and ready for the day.",
 				dialog: [{ who: "Fiela", text: "I love bubbles!" }],
 				image: "🛁",
-				interactive: ["🫧 Create bubbles", "🛁 Bath sounds", "📖 Learn: clean"],
+				interactive: ["🫧 Click Soap → bubble effect", "🛁 Play 'bath' audio", "📖 Word: clean"],
 				keyPhrase: "I love bubbles",
 				audio: "assets/audio/units/unit1/scene3_narration.mp3"
 			},
 			{
-				id: 4, title: "Choosing an Outfit", setting:"Bedroom with open closet and school clothes",
-				vocabFocus:"uniform, shirt, skirt, shoes, get dressed",
-				narrative:"Fiela opens her wardrobe...","dialog":[{who:"Fiela",text:"I'm almost ready!"},{who:"Mom",text:"Good job! Don't forget your shoes."}],image:"👗",interactive:["👕 Shirt sound","👗 Uniform colors","👟 Shoes game"],keyPhrase:"I'm almost ready",
+				id: 4, title: "Choosing an Outfit", setting:"Bedroom with open closet, school clothes",
+				vocabFocus:"uniform, shirt, skirt/pants, shoes, get dressed",
+				narrative:"Fiela opens her wardrobe. She sees her school uniform neatly folded. She puts on her shirt, her skirt, and her white socks. Then she ties her shoelaces slowly.",
+				dialog:[{who:"Fiela",text:"I'm almost ready!"},{who:"Mom",text:"Good job! Don't forget your shoes."}],
+				image: "👗",
+				interactive: ["👕 Click Clothes → audio 'shirt'", "👟 Drag clothes to Fiela (mini challenge)", "📖 Word: uniform"],
+				keyPhrase: "I'm almost ready",
 				audio: "assets/audio/units/unit1/scene4_narration.mp3"
 			},
 			{
-				id:5, title:"Breakfast with Mom", setting:"Dining table with simple breakfast", vocabFocus:"breakfast, rice, egg, milk, spoon",
-				narrative:"Fiela sits at the dining table...", dialog:[{who:"Mom",text:"Eat slowly."},{who:"Fiela",text:"Okay, Mom. This egg is yummy!"}], image:"🥣", interactive:["🥛 Milk","🥚 Egg","📖 Learn: spoon"], keyPhrase:"This egg is yummy",
+				id:5, title:"Breakfast with Mom", setting:"Dining table with a simple breakfast", vocabFocus:"breakfast, rice, egg, milk, spoon",
+				narrative:"Fiela sits at the dining table. Her mom has prepared rice, an egg, and a glass of milk. The food smells nice and warm. Fiela takes a moment before eating. Then, Fiela eats her breakfast happily.",
+				dialog:[{who:"Mom",text:"Eat slowly."},{who:"Fiela",text:"Okay, Mom. This egg is yummy!"}],
+				image: "🥣",
+				interactive: ["🥛 Click Milk → audio", "🥚 Click Egg → audio", "📖 Word: spoon"],
+				keyPhrase: "This egg is yummy",
 				audio: "assets/audio/units/unit1/scene5_narration.mp3"
 			},
 			{
-				id:6, title:"Packing the Bag", setting:"Near the door with school bag and items", vocabFocus:"bag, book, bottle, pack",
-				narrative:"After breakfast, Fiela packs her school bag...", dialog:[{who:"Fiela",text:"Mom, I'm ready!"},{who:"Mom",text:"Great! Let's go."}], image:"🎒", interactive:["🎒 Bag sounds","📚 Book","💧 Water bottle"], keyPhrase:"Mom I'm ready",
+				id:6, title:"Packing the Bag", setting:"Near the door, school bags, books, bottle", vocabFocus:"bag, book, bottle, pack",
+				narrative:"After breakfast, Fiela packs her school bag. She puts in her book, her pencil case, and her water bottle. Her bag is a little heavy, but she can carry it.",
+				dialog:[{who:"Fiela",text:"Mom, I'm ready!"},{who:"Mom",text:"Great! Let's go."}],
+				image: "🎒",
+				interactive: ["🎒 Drag items to bag", "📚 Click Book → audio", "💧 Click Bottle → audio"],
+				keyPhrase: "I'm ready for school",
 				audio: "assets/audio/units/unit1/scene6_narration.mp3"
 			},
 			{
-				id:7, title:"Walking to School", setting:"Morning walks with birds and friends nearby", vocabFocus:"walk, run, school, friend",
-				narrative:"Fiela walks outside...", dialog:[{who:"Dira",text:"Good morning, Fiela!"},{who:"Fiela",text:"Good morning! Let's walk together."}], image:"🚶", interactive:["🐦 Bird sounds","👋 Wave greeting","📖 Learn: friend"], keyPhrase:"Good morning let's walk together",
+				id:7, title:"Walking to School", setting:"Morning walks, birds chirping, friends passing by", vocabFocus:"walk, run, school, friend",
+				narrative:"Fiela walks outside. The air is fresh. Birds are singing on the tree. She sees her friend, Dira, waving from across the street. They walk together toward school.",
+				dialog:[{who:"Dira",text:"Good morning, Fiela!"},{who:"Fiela",text:"Good morning! Let's walk together."}],
+				image: "🚶",
+				interactive: ["🐦 Click Bird → chirp audio", "👋 Click Friend → audio", "📖 Word: friend"],
+				keyPhrase: "Let's walk together",
 				audio: "assets/audio/units/unit1/scene7_narration.mp3"
 			},
 			{
-				id:8, title:"Ready for Class!", setting:"School gate with morning atmosphere", vocabFocus:"ready, school, hello, morning",
-				narrative:"Fiela reaches the school gate...", dialog:[{who:"Mom",text:"Have a great day!"},{who:"Fiela",text:"Thank you, Mom!"}], image:"🏫", interactive:["🎓 School","👋 Wave goodbye","⭐ Unit Complete"], keyPhrase:"Have a great day",
+				id:8, title:"Ready for Class!", setting:"School gate & morning atmosphere", vocabFocus:"ready, school, hello, morning",
+				narrative:"Fiela reaches the school gate. She feels happy and ready to learn. She waves goodbye to her mom and walks into her classroom.",
+				dialog:[{who:"Mom",text:"Have a great day!"},{who:"Fiela",text:"Thank you, Mom!"}],
+				image: "🏫",
+				interactive: ["🎓 Reward: 'You finished the story!'", "📚 Vocabulary List", "🎮 Mini-games unlocked"],
+				keyPhrase: "Have a great day",
 				audio: "assets/audio/units/unit1/scene8_narration.mp3"
 			}
 		]
 	},
 	{
 		id: 2,
-		title: "At the Market",
-		emoji: "🛒",
+		title: "My Family",
+		emoji: "👨‍👩‍👧‍👦",
 		vocab: {
-			Verbs: ["go", "look", "choose", "buy", "pay", "carry", "sell", "talk", "help", "eat"],
-			Nouns: ["market", "fruit", "vegetable", "stall", "money", "basket", "sign", "customer", "seller"],
-			Expressions: ["How much?", "It's fresh!", "I want this.", "Let's buy it.", "Thank you!"]
+			"Family Nouns": ["mother", "father", "sister", "brother", "grandmother", "grandfather"],
+			"House & Objects": ["living room", "kitchen", "table", "photo", "chair"],
+			"Actions": ["help", "cook", "read", "talk", "play", "hug"],
+			"Expressions": ["This is my…", "Let me help!", "Come here!", "Thank you!", "I love you!"]
 		},
 		scenes: [
 			{
 				id: 1,
-				title: "Arriving at the Market",
-				setting: "Outside view of a busy market",
-				vocabFocus: "go, look, market, fruit, vegetable",
-				narrative: "Fiela and her mom arrive at the market. There are many stalls. Fiela sees colorful fruits and vegetables. She says, 'Wow, look at all the fresh produce!'",
+				title: "Sunday Morning at Home",
+				setting: "Fiela's house, warm morning",
+				vocabFocus: "morning, family, living room, together",
+				narrative: "It is Sunday morning. Fiela wakes up feeling happy. Today, her whole family is at home. She walks to the living room and sees her mother, father, and little sister sitting together.",
 				dialog: [
-					{ who: "Mom", text: "Welcome to the market, Fiela!" },
-					{ who: "Fiela", text: "It's so lively here!" }
+					{ who: "Fiela", text: "Good morning, everyone!" },
+					{ who: "Mother", text: "Good morning, Fiela!" }
 				],
-				image: "🏙️",
-				interactive: ["🚶‍♀️ Walk to market", "🍎 See apples", "📖 Learn: market"],
-				keyPhrase: "Wow, look at all the fresh produce!",
+				image: "🏠",
+				interactive: ["🛋️ Click Sofa → audio 'living room'", "📖 Word: family"],
+				keyPhrase: "Good morning everyone",
 				audio: "assets/audio/units/unit2/scene1_narration.mp3"
 			},
 			{
 				id: 2,
-				title: "Choosing Fresh Fruits",
-				setting: "Fruit stall with various fruits",
-				vocabFocus: "choose, buy, fruit, money",
-				narrative: "Fiela helps her mom choose fruits. They pick apples, bananas, and grapes. Fiela gives the seller some money. The seller says, 'Thank you!'",
+				title: "Helping Mom in the Kitchen",
+				setting: "Kitchen with vegetables, stove, apron",
+				vocabFocus: "mother, kitchen, cook, vegetables, help",
+				narrative: "Fiela goes to the kitchen. Her mother is cutting vegetables. The kitchen smells delicious. Fiela puts on a small apron. She wants to help.",
 				dialog: [
-					{ who: "Fiela", text: "I want to buy these apples." },
-					{ who: "Seller", text: "That will be 10 pesos, please." }
+					{ who: "Fiela", text: "Mom, let me help!" },
+					{ who: "Mother", text: "Of course! Please wash the carrots." }
 				],
-				image: "🍏",
-				interactive: ["🍌 Pick banana", "💵 Pay seller", "📖 Learn: buy"],
-				keyPhrase: "I want to buy these apples.",
+				image: "👩‍🍳",
+				interactive: ["🥕 Click Carrots → audio", "💧 Vegetable wash effect", "📖 Word: cook"],
+				keyPhrase: "Let me help",
 				audio: "assets/audio/units/unit2/scene2_narration.mp3"
 			},
 			{
 				id: 3,
-				title: "Talking with the Seller",
-				setting: "Close-up of Fiela talking to a friendly seller",
-				vocabFocus: "talk, help, seller, customer",
-				narrative: "Fiela talks to the seller. She asks, 'How do you keep the fruits so fresh?' The seller replies, 'We pick them every morning!'",
+				title: "Dad’s Quiet Corner",
+				setting: "Dad reading newspaper in chair",
+				vocabFocus: "father, read, chair, newspaper, quiet",
+				narrative: "Fiela walks to the corner of the living room. Her father is reading the newspaper in his favorite chair. He smiles softly when he sees Fiela.",
 				dialog: [
-					{ who: "Fiela", text: "How do you keep the fruits so fresh?" },
-					{ who: "Seller", text: "We pick them every morning!" }
+					{ who: "Father", text: "Good morning, sweetheart." },
+					{ who: "Fiela", text: "What are you reading, Dad?" },
+					{ who: "Father", text: "Just the morning news." }
 				],
-				image: "🗣️",
-				interactive: ["🛒 Buy more", "📦 Pack fruits", "📖 Learn: fresh"],
-				keyPhrase: "How do you keep the fruits so fresh?",
+				image: "📰",
+				interactive: ["📰 Click Newspaper → audio", "👨 Dad gesture animation"],
+				keyPhrase: "What are you reading",
 				audio: "assets/audio/units/unit2/scene3_narration.mp3"
 			},
 			{
 				id: 4,
-				title: "Enjoying a Snack",
-				setting: "Bench at the market, eating fresh fruits",
-				vocabFocus: "eat, fruit, snack, delicious",
-				narrative: "Fiela and her mom take a break. They eat the fresh fruits they just bought. Fiela says, 'This is the best mango I've ever had!'",
+				title: "Playing with Little Sister",
+				setting: "Playroom with toys and blocks",
+				vocabFocus: "sister, toys, play, blocks, share",
+				narrative: "In the play area, Fiela’s little sister, Mila, is building a tower with colorful blocks. Fiela sits beside her and helps her add another block on top.",
 				dialog: [
-					{ who: "Fiela", text: "This mango is so sweet!" },
-					{ who: "Mom", text: "I'm glad you like it." }
+					{ who: "Mila", text: "Play with me!" },
+					{ who: "Fiela", text: "Okay! Let's share the blocks." }
 				],
-				image: "🍽️",
-				interactive: ["🥭 Taste mango", "🍍 Try pineapple", "📖 Learn: delicious"],
-				keyPhrase: "This mango is so sweet!",
+				image: "🧱",
+				interactive: ["🧱 Drag blocks", "👧 Click Sister → audio"],
+				keyPhrase: "Let's share the blocks",
 				audio: "assets/audio/units/unit2/scene4_narration.mp3"
 			},
 			{
 				id: 5,
-				title: "Saying Goodbye",
-				setting: "Outside the market, waving goodbye",
-				vocabFocus: "goodbye, market, see you",
-				narrative: "After shopping, Fiela and her mom leave the market. Fiela waves goodbye to the seller. She says, 'See you next time!'",
+				title: "A Visit from Grandma",
+				setting: "Front door, Grandma arrives with bag",
+				vocabFocus: "grandmother, visit, hug, bag",
+				narrative: "Ding dong! The doorbell rings. Fiela runs to the door. It is her grandmother! She gives Fiela a warm hug.",
 				dialog: [
-					{ who: "Fiela", text: "Goodbye! See you next time!" },
-					{ who: "Seller", text: "Take care!" }
+					{ who: "Grandma", text: "I brought some fresh fruit for you!" },
+					{ who: "Fiela", text: "Thank you, Grandma!" }
 				],
-				image: "👋",
-				interactive: ["🚶‍♀️ Walk home", "📖 Learn: goodbye"],
-				keyPhrase: "See you next time!",
+				image: "👵",
+				interactive: ["🎁 Click Bag → audio", "🤗 Hug animation"],
+				keyPhrase: "Thank you grandma",
 				audio: "assets/audio/units/unit2/scene5_narration.mp3"
 			},
 			{
 				id: 6,
-				title: "Helping at the Stall",
-				setting: "Fruit stall, helping the seller",
-				vocabFocus: "help, seller, arrange, clean",
-				narrative: "Fiela helps the seller arrange the fruits. She learns how to clean the stall. The seller appreciates her help.",
+				title: "Grandpa’s Story Time",
+				setting: "Porch with grandfather, story time",
+				vocabFocus: "grandfather, story, chair, afternoon, laugh",
+				narrative: "Grandpa sits on the porch with his wooden cane. He loves telling stories from his childhood. Fiela sits close to him and listens carefully.",
 				dialog: [
-					{ who: "Seller", text: "Can you help me arrange these fruits?" },
-					{ who: "Fiela", text: "Sure! I love helping." }
+					{ who: "Grandfather", text: "Did I ever tell you about the mango tree?" },
+					{ who: "Fiela", text: "No, Grandpa! Tell me!" }
 				],
-				image: "🧹",
-				interactive: ["🍏 Arrange apples", "🍌 Organize bananas", "📖 Learn: help"],
-				keyPhrase: "Sure! I love helping.",
+				image: "👴",
+				interactive: ["📖 Play story audio", "🥭 Mango image popup"],
+				keyPhrase: "Tell me a story",
 				audio: "assets/audio/units/unit2/scene6_narration.mp3"
 			},
 			{
 				id: 7,
-				title: "Learning about Fruits",
-				setting: "Sitting with the seller, learning about fruits",
-				vocabFocus: "learn, fruit, healthy, vitamins",
-				narrative: "The seller teaches Fiela about different fruits. Fiela learns that fruits have vitamins. Eating fruits is healthy.",
+				title: "Family Photo Time",
+				setting: "Family gathers for photo",
+				vocabFocus: "photo, smile, together, family",
+				narrative: "Mother takes out her phone. 'Let's take a family photo!' she says. Everyone gathers in the living room. They smile brightly—click!—a beautiful picture is taken.",
 				dialog: [
-					{ who: "Seller", text: "Fiela, do you know why fruits are good for you?" },
-					{ who: "Fiela", text: "No, why?" },
-					{ who: "Seller", text: "Fruits have vitamins that keep you healthy!" }
+					{ who: "Father", text: "One more! Say cheese!" },
+					{ who: "All", text: "Cheese!" }
 				],
-				image: "📚",
-				interactive: ["🍎 Learn about apples", "🍌 Learn about bananas", "📖 Learn: vitamins"],
-				keyPhrase: "Fruits have vitamins that keep you healthy!",
+				image: "📸",
+				interactive: ["📸 Camera flash animation", "😊 Smile audio"],
+				keyPhrase: "Say cheese",
 				audio: "assets/audio/units/unit2/scene7_narration.mp3"
 			},
 			{
 				id: 8,
-				title: "Unit Review and Goodbye",
-				setting: "Market background with a review board",
-				vocabFocus: "review, goodbye, see you",
-				narrative: "Fiela reviews what she learned at the market. She says goodbye to the seller. Fiela enjoyed her time at the market.",
+				title: "A Lovely Ending",
+				setting: "Twilight in the living room",
+				vocabFocus: "happy, love, home, evening",
+				narrative: "In the evening, the family sits together once again. They laugh, talk, and enjoy the quiet night. Fiela looks at everyone and feels warm inside. 'This is my family,' she thinks. 'I love them so much.'",
 				dialog: [
-					{ who: "Fiela", text: "I learned so much today!" },
-					{ who: "Seller", text: "I'm glad to hear that. Goodbye, Fiela!" }
+					{ who: "Mother", text: "Did you have a good day?" },
+					{ who: "Fiela", text: "Yes, Mom. The best day!" }
 				],
-				image: "📊",
-				interactive: ["📖 Review vocabulary", "🚶‍♀️ Leave the market"],
-				keyPhrase: "I learned so much today!",
+				image: "❤️",
+				interactive: ["❤️ Family hug", "🏠 Home popup", "⭐ Reward badge"],
+				keyPhrase: "I love you all",
 				audio: "assets/audio/units/unit2/scene8_narration.mp3"
 			}
 		]
 	},
 	{
 		id: 3,
-		title: "At School",
+		title: "In the Classroom",
 		emoji: "🏫",
 		vocab: {
-			Verbs: ["learn", "read", "write", "listen", "speak", "ask", "answer", "play", "sing", "draw"],
-			Nouns: ["school", "teacher", "classroom", "book", "pencil", "homework", "recess", "friend"],
-			Expressions: ["I don't understand.", "Can you help me?", "Let's play a game.", "What is this?", "Good job!"]
+			Objects: ["book", "pencil", "eraser", "bag", "table", "chair", "board", "marker", "clock", "window"],
+			Actions: ["sit", "stand", "write", "read", "listen", "raise your hand", "open", "close", "point"],
+			Expressions: ["Good morning, class!", "I don't understand", "Can you help me?", "May I go to the toilet?", "Let's work together!", "Very good!"]
 		},
 		scenes: [
 			{
 				id: 1,
 				title: "Entering the Classroom",
-				setting: "Classroom with students and teacher",
-				vocabFocus: "learn, read, write, listen",
-				narrative: "Fiela enters the classroom. The teacher says, 'Welcome, Fiela! Please take a seat.' Fiela sits down and opens her book.",
+				setting: "Before the lesson starts, students enter the class",
+				vocabFocus: "classroom, bag, desk, chair, board",
+				narrative: "The bell rings. Ding-dong! Fiela walks into her classroom. She puts her bag beside her desk and sits on her favorite chair. The room is bright and full of colorful posters. Her friends are taking out their books.",
 				dialog: [
-					{ who: "Teacher", text: "Welcome, Fiela! Please take a seat." },
-					{ who: "Fiela", text: "Thank you, teacher." }
+					{ who: "Teacher (Ms. Rani)", text: "Good morning, class!" },
+					{ who: "Students", text: "Good morning, Teacher!" }
 				],
-				image: "🪑",
-				interactive: ["📚 Open book", "✏️ Take out pencil", "📖 Learn: classroom"],
-				keyPhrase: "Welcome, Fiela! Please take a seat.",
+				image: "🏫",
+				interactive: ["🕐 Click Clock → audio", "🪑 Click Desk → audio"],
+				keyPhrase: "Good morning class",
 				audio: "assets/audio/units/unit3/scene1_narration.mp3"
 			},
 			{
 				id: 2,
-				title: "Learning about Animals",
-				setting: "Classroom with animal posters",
-				vocabFocus: "animal, cat, dog, bird, fish",
-				narrative: "The teacher shows pictures of animals. Fiela learns about cats, dogs, birds, and fish. She raises her hand and says, 'I have a pet fish!'",
+				title: "Time to Start",
+				setting: "Teacher at whiteboard with colored markers",
+				vocabFocus: "teacher, board, marker, write, listen",
+				narrative: "Ms. Rani walks to the board. She picks up a blue marker. She writes the topic of the day: 'My Favorite Things'. The students listen quietly.",
 				dialog: [
-					{ who: "Teacher", text: "What animal is this?" },
-					{ who: "Fiela", text: "That's a cat." },
-					{ who: "Teacher", text: "Good job, Fiela!" }
+					{ who: "Teacher", text: "Today, we learn new words. Please listen carefully." },
+					{ who: "Fiela (whispering to Dira)", text: "I like the blue marker!" }
 				],
-				image: "🐾",
-				interactive: ["🐶 See dog", "🐱 See cat", "📖 Learn: animals"],
-				keyPhrase: "I have a pet fish!",
+				image: "📝",
+				interactive: ["✏️ Marker writing animation", "🔊 Play 'marker' audio"],
+				keyPhrase: "Please listen carefully",
 				audio: "assets/audio/units/unit3/scene2_narration.mp3"
 			},
 			{
 				id: 3,
-				title: "Recess Time",
-				setting: "Playground with children playing",
-				vocabFocus: "play, swing, slide, fun",
-				narrative: "It's recess time! Fiela plays on the swing. Then she goes down the slide. She laughs and says, 'This is fun!'",
+				title: "Learning New Words",
+				setting: "Teacher shows picture cards",
+				vocabFocus: "book, pencil, eraser, ruler, repeat",
+				narrative: "Ms. Rani shows four picture cards: a book, a pencil, an eraser, and a ruler. She holds each card high so everyone can see.",
 				dialog: [
-					{ who: "Fiela", text: "I love recess!" },
-					{ who: "Friend", text: "Me too! Let's play together." }
+					{ who: "Teacher", text: "Repeat after me: book." },
+					{ who: "Students", text: "Book!" },
+					{ who: "Teacher", text: "Pencil." },
+					{ who: "Students", text: "Pencil!" }
 				],
-				image: "🏞️",
-				interactive: ["⚙️ Swing animation", "🛝 Slide animation", "📖 Learn: play"],
-				keyPhrase: "This is fun!",
+				image: "📚",
+				interactive: ["📚 Click Card → pronunciation", "🎮 Matching mini-game"],
+				keyPhrase: "Book pencil eraser",
 				audio: "assets/audio/units/unit3/scene3_narration.mp3"
 			},
 			{
 				id: 4,
-				title: "Back to Class",
-				setting: "Classroom with desks and chairs",
-				vocabFocus: "sit, listen, teacher, class",
-				narrative: "After recess, Fiela goes back to class. The teacher asks, 'What did you do during recess?' Fiela replies, 'I played with my friends.'",
+				title: "Pair Work with Dira",
+				setting: "Fiela paired up with Dira",
+				vocabFocus: "pair, help, ask, answer, talk",
+				narrative: "The students work in pairs. Fiela and Dira sit together and practice asking and answering questions. They smile and help each other pronounce the words correctly.",
 				dialog: [
-					{ who: "Teacher", text: "What did you do during recess?" },
-					{ who: "Fiela", text: "I played with my friends." }
+					{ who: "Dira", text: "What is this?" },
+					{ who: "Fiela", text: "It's an eraser!" },
+					{ who: "Fiela", text: "Your turn!" },
+					{ who: "Dira", text: "Okay!" }
 				],
-				image: "📝",
-				interactive: ["📖 Read book", "✏️ Write notes", "📖 Learn: class"],
-				keyPhrase: "I played with my friends.",
+				image: "👥",
+				interactive: ["👥 Pair practice", "💬 Ask–answer activity"],
+				keyPhrase: "What is this",
 				audio: "assets/audio/units/unit3/scene4_narration.mp3"
 			},
 			{
 				id: 5,
-				title: "Helping the Teacher",
-				setting: "Classroom, helping the teacher",
-				vocabFocus: "help, teacher, clean, organize",
-				narrative: "Fiela helps the teacher organize the books. She learns how to clean the board. The teacher says, 'Thank you for your help, Fiela.'",
+				title: "A Little Problem",
+				setting: "Fiela's book falls — small learning moment",
+				vocabFocus: "fall, pick up, careful, understand",
+				narrative: "Suddenly, Fiela's book falls to the floor with a soft thud. She bends down to pick it up. But she doesn't understand one word on the page.",
 				dialog: [
-					{ who: "Teacher", text: "Can you help me with these books?" },
-					{ who: "Fiela", text: "Yes, teacher. I will help." }
+					{ who: "Fiela", text: "Teacher, I don't understand this word." },
+					{ who: "Teacher", text: "Let me help you, Fiela." }
 				],
-				image: "🧹",
-				interactive: ["📚 Organize books", "🧼 Clean board", "📖 Learn: help"],
-				keyPhrase: "Thank you for your help, Fiela.",
+				image: "📖",
+				interactive: ["📚 Click Book → audio", "🔍 Highlight word"],
+				keyPhrase: "I don't understand",
 				audio: "assets/audio/units/unit3/scene5_narration.mp3"
 			},
 			{
 				id: 6,
-				title: "Learning to Sing",
-				setting: "Music room with musical notes",
-				vocabFocus: "sing, song, music, notes",
-				narrative: "In music class, Fiela learns to sing a new song. The teacher claps and says, 'Great singing, Fiela!'",
+				title: "Teacher’s Explanation",
+				setting: "Teacher explains with visual cards",
+				vocabFocus: "point, show, say, meaning",
+				narrative: "Ms. Rani comes to Fiela's desk. She points at the word and shows a picture card that matches it. Her explanation is clear and simple.",
 				dialog: [
-					{ who: "Music Teacher", text: "Let's sing a song, everyone!" },
-					{ who: "Fiela", text: "I love singing!" }
+					{ who: "Teacher", text: "This word means 'clean'. Repeat after me." },
+					{ who: "Fiela", text: "Clean." },
+					{ who: "Teacher", text: "Very good!" }
 				],
-				image: "🎶",
-				interactive: ["🎤 Sing along", "🎵 Choose a song", "📖 Learn: music"],
-				keyPhrase: "Great singing, Fiela!",
+				image: "✨",
+				interactive: ["👉 Pointing animation", "🔊 Pronounce 'clean'"],
+				keyPhrase: "Clean means tidy",
 				audio: "assets/audio/units/unit3/scene6_narration.mp3"
 			},
 			{
 				id: 7,
-				title: "Drawing Animals",
-				setting: "Art class with drawing materials",
-				vocabFocus: "draw, animal, color, paint",
-				narrative: "In art class, Fiela draws her pet fish. She uses blue and green colors. The teacher says, 'Beautiful drawing, Fiela!'",
+				title: "Group Activity: Classroom Hunt",
+				setting: "Object search activity in class",
+				vocabFocus: "find, look for, window, clock, bag, chair",
+				narrative: "It's activity time! Ms. Rani says: 'Find three things in the classroom!' The students walk around excitedly.",
 				dialog: [
-					{ who: "Art Teacher", text: "Draw your favorite animal, class." },
-					{ who: "Fiela", text: "I'm drawing my pet fish." }
+					{ who: "Fiela", text: "I found the clock!" },
+					{ who: "Dira", text: "I found a window!" }
 				],
-				image: "🎨",
-				interactive: ["🐟 Draw fish", "🎨 Choose colors", "📖 Learn: draw"],
-				keyPhrase: "Beautiful drawing, Fiela!",
+				image: "🔍",
+				interactive: ["🔍 Scavenger hunt mini-game", "🕐 Click Clock"],
+				keyPhrase: "I found the clock",
 				audio: "assets/audio/units/unit3/scene7_narration.mp3"
 			},
 			{
 				id: 8,
-				title: "Unit Review and Goodbye",
-				setting: "Classroom with a review board",
-				vocabFocus: "review, goodbye, see you",
-				narrative: "Fiela reviews what she learned in school. She says goodbye to the teacher. Fiela enjoyed her time learning.",
+				title: "Closing Time",
+				setting: "End of lesson, students clean up",
+				vocabFocus: "clean up, put away, goodbye, see you",
+				narrative: "The class is almost over. Students put away their pencils and close their books. The room becomes quiet again.",
 				dialog: [
-					{ who: "Fiela", text: "I learned so much in school!" },
-					{ who: "Teacher", text: "I'm proud of you, Fiela. Goodbye!" }
+					{ who: "Teacher", text: "Good job today, class. See you tomorrow!" },
+					{ who: "Students", text: "See you, Teacher!" }
 				],
-				image: "📚",
-				interactive: ["📖 Review vocabulary", "🚪 Leave the classroom"],
-				keyPhrase: "I learned so much in school!",
+				image: "👋",
+				interactive: ["🧹 Clean up", "👋 Goodbye audio", "⭐ Reward badge"],
+				keyPhrase: "See you tomorrow teacher",
 				audio: "assets/audio/units/unit3/scene8_narration.mp3"
 			}
 		]
 	},
 	{
 		id: 4,
-		title: "At Home",
-		emoji: "🏠",
+		title: "My Favorite Food",
+		emoji: "🍽️",
 		vocab: {
-			Verbs: ["arrive", "clean", "cook", "eat", "rest", "play", "read", "help", "watch", "sleep"],
-			Nouns: ["home", "kitchen", "bedroom", "living room", "bathroom", "garden", "garage", "dinner"],
-			Expressions: ["I'm home!", "What's for dinner?", "Time to relax.", "Let's play a game.", "Good night!"]
+			Food: ["rice", "noodles", "chicken", "fish", "vegetables", "fruit", "soup", "egg", "water"],
+			Taste: ["sweet", "salty", "spicy", "crunchy", "warm", "delicious", "fresh"],
+			Actions: ["eat", "cook", "wash", "cut", "mix", "taste", "choose", "enjoy"],
+			Expressions: ["My favorite food is…", "I like…", "I don't like…", "Can I try?", "This is yummy!", "Let's eat!"]
 		},
 		scenes: [
 			{
 				id: 1,
-				title: "Arriving Home",
-				setting: "Outside view of Fiela's home",
-				vocabFocus: "arrive, home, garden, garage",
-				narrative: "Fiela arrives home from school. She says, 'I'm home!'.",
+				title: "What's for Lunch?",
+				setting: "Kitchen, smell of food",
+				vocabFocus: "lunch, food, smell, delicious",
+				narrative: "It is almost lunchtime. Fiela walks into the kitchen and smells something delicious. Her stomach growls softly. She wonders what her mother is cooking today.",
 				dialog: [
-					{ who: "Fiela", text: "I'm home!" },
-					{ who: "Mom", text: "Welcome back, Fiela!" }
+					{ who: "Fiela", text: "Mom, what's for lunch?" },
+					{ who: "Mother", text: "Come and see!" }
 				],
-				image: "🏡",
-				interactive: ["🚪 Open door", "🌳 See garden", "📖 Learn: home"],
-				keyPhrase: "I'm home!",
+				image: "🍳",
+				interactive: ["🍳 Pan sound", "👃 Click 'delicious' definition"],
+				keyPhrase: "What's for lunch",
 				audio: "assets/audio/units/unit4/scene1_narration.mp3"
 			},
 			{
 				id: 2,
 				title: "Helping in the Kitchen",
-				setting: "Kitchen with cooking ingredients",
-				vocabFocus: "help, cook, kitchen, ingredients",
-				narrative: "Fiela helps her mom in the kitchen. They cook rice, fish, and vegetables. Fiela learns to use a knife safely.",
+				setting: "Preparing ingredients",
+				vocabFocus: "vegetables, chicken, egg, wash, cut",
+				narrative: "On the table, there are fresh vegetables, pieces of chicken, and two eggs. Mother washes the vegetables under running water. She cuts the carrots and mixes them with other ingredients.",
 				dialog: [
-					{ who: "Mom", text: "Can you help me chop the vegetables?" },
-					{ who: "Fiela", text: "Sure, Mom. I will be careful." }
+					{ who: "Fiela", text: "Can I help?" },
+					{ who: "Mother", text: "Yes, please wash the tomatoes." }
 				],
-				image: "🍳",
-				interactive: ["🔪 Chop vegetables", "🍚 Cook rice", "📖 Learn: kitchen"],
-				keyPhrase: "Sure, Mom. I will be careful.",
+				image: "🥕",
+				interactive: ["🍅 Wash tomatoes mini-game", "🥕 Cut vegetables animation"],
+				keyPhrase: "Can I help",
 				audio: "assets/audio/units/unit4/scene2_narration.mp3"
 			},
 			{
 				id: 3,
-				title: "Setting the Table",
-				setting: "Dining table with dishes and utensils",
-				vocabFocus: "set, table, plate, glass",
-				narrative: "Fiela sets the table for dinner. She places plates, glasses, and utensils. Mom says, 'Thank you for setting the table, Fiela.'",
+				title: "Tasting the Soup",
+				setting: "Soup pot with steam",
+				vocabFocus: "soup, warm, taste, spoon",
+				narrative: "A pot of warm soup is boiling gently. Mother dips a wooden spoon and tastes it. She smiles happily.",
 				dialog: [
-					{ who: "Mom", text: "Can you set the table for dinner?" },
-					{ who: "Fiela", text: "Yes, Mom. I love setting the table." }
+					{ who: "Mother", text: "The soup is ready. Do you want to try?" },
+					{ who: "Fiela", text: "Yes, please!" }
 				],
-				image: "🍽️",
-				interactive: ["🍴 Arrange utensils", "🥛 Pour drink", "📖 Learn: table"],
-				keyPhrase: "Thank you for setting the table, Fiela.",
+				image: "🍲",
+				interactive: ["🥄 Click Spoon → audio 'taste'", "🌡️ 'Warm' popup"],
+				keyPhrase: "Yes please",
 				audio: "assets/audio/units/unit4/scene3_narration.mp3"
 			},
 			{
 				id: 4,
-				title: "Dinner Time",
-				setting: "Dining table with family",
-				vocabFocus: "eat, dinner, family, talk",
-				narrative: "At dinner, Fiela eats with her family. They talk about their day. Fiela says, 'I learned new words in school.'",
+				title: "Choosing My Favorite Food",
+				setting: "Dining table full of food",
+				vocabFocus: "rice, chicken, fruit, choose, favorite",
+				narrative: "Lunch is ready! On the dining table, there is rice, chicken, soup, and a bowl of fresh fruit. Fiela looks at everything carefully. She wants to choose her favorite food.",
 				dialog: [
-					{ who: "Dad", text: "How was school today, Fiela?" },
-					{ who: "Fiela", text: "I learned new words!" }
+					{ who: "Fiela", text: "Hmm… I like chicken. It's my favorite!" },
+					{ who: "Mother", text: "Good choice!" }
 				],
-				image: "🍲",
-				interactive: ["🍚 Eat rice", "🐟 Eat fish", "📖 Learn: dinner"],
-				keyPhrase: "I learned new words!",
+				image: "🍗",
+				interactive: ["🍗 Click Chicken → audio", "🎮 Choose your favorite mini-game"],
+				keyPhrase: "Chicken is my favorite",
 				audio: "assets/audio/units/unit4/scene4_narration.mp3"
 			},
 			{
 				id: 5,
-				title: "Washing the Dishes",
-				setting: "Kitchen sink with dishes",
-				vocabFocus: "wash, dishes, soap, water",
-				narrative: "After dinner, Fiela washes the dishes. She uses soap and water. Mom says, 'Great job, Fiela! You're a big help.'",
+				title: "Eating Together",
+				setting: "Family meal time",
+				vocabFocus: "eat, drink, enjoy, glass, water",
+				narrative: "Fiela sits with her family. They take a short moment together before eating. Then they begin their meal. Fiela eats her rice and chicken happily and drinks a glass of cool water.",
 				dialog: [
-					{ who: "Mom", text: "Can you wash the dishes, please?" },
-					{ who: "Fiela", text: "Yes, Mom. I will wash them now." }
+					{ who: "Father", text: "How is the food?" },
+					{ who: "Fiela", text: "It's yummy!" }
 				],
-				image: "🧼",
-				interactive: ["🍽️ Wash plate", "🥄 Wash spoon", "📖 Learn: wash"],
-				keyPhrase: "Great job, Fiela! You're a big help.",
+				image: "👨‍👩‍👧",
+				interactive: ["🥤 Click Glass → audio", "😋 'Enjoy' popup"],
+				keyPhrase: "It's yummy",
 				audio: "assets/audio/units/unit4/scene5_narration.mp3"
 			},
 			{
 				id: 6,
-				title: "Relaxing in the Living Room",
-				setting: "Living room with TV and sofa",
-				vocabFocus: "relax, watch, TV, read",
-				narrative: "Fiela relaxes in the living room. She watches her favorite show on TV. After that, she reads a book.",
+				title: "A Spicy Surprise",
+				setting: "Chili sauce on the side",
+				vocabFocus: "spicy, try, small, careful",
+				narrative: "Next to the rice, there is a small spoon of chili sauce. Fiela looks at it curiously. She touches a tiny bit with her finger. Her eyes widen. 'It's spicy!' she laughs.",
 				dialog: [
-					{ who: "Fiela", text: "I love watching this show." },
-					{ who: "Mom", text: "It's time to read now." }
+					{ who: "Fiela", text: "Can I try this?" },
+					{ who: "Mother", text: "Just a little. It's spicy!" }
 				],
-				image: "📺",
-				interactive: ["📖 Read book", "📺 Watch TV", "📖 Learn: relax"],
-				keyPhrase: "I love watching this show.",
+				image: "🌶️",
+				interactive: ["🌶️ Click Chili → 'Spicy' audio", "🔥 Small flame effect (fun)"],
+				keyPhrase: "It's spicy",
 				audio: "assets/audio/units/unit4/scene6_narration.mp3"
 			},
 			{
 				id: 7,
-				title: "Getting Ready for Bed",
-				setting: "Bedroom with bed and nightstand",
-				vocabFocus: "sleep, bed, blanket, pillow",
-				narrative: "Before bed, Fiela brushes her teeth and puts on her pajamas. She climbs into bed and says, 'Good night, world.'",
+				title: "Fruit Time!",
+				setting: "Colorful fruit bowls",
+				vocabFocus: "apple, banana, mango, sweet, fresh",
+				narrative: "After lunch, it's fruit time. Fiela picks a slice of mango. It is sweet and fresh.",
 				dialog: [
-					{ who: "Fiela", text: "Good night, world." },
-					{ who: "Mom", text: "Sweet dreams, Fiela." }
+					{ who: "Dira (voice note)", text: "What are you eating?" },
+					{ who: "Fiela", text: "A sweet mango!" }
 				],
-				image: "🛏️",
-				interactive: ["🪥 Brush teeth", "🛌 Lie down", "📖 Learn: sleep"],
-				keyPhrase: "Good night, world.",
+				image: "🥭",
+				interactive: ["🥭 Click Mango → audio", "🍌 Click Banana → audio"],
+				keyPhrase: "A sweet mango",
 				audio: "assets/audio/units/unit4/scene7_narration.mp3"
 			},
 			{
 				id: 8,
-				title: "Unit Review and Goodbye",
-				setting: "Bedroom with a review board",
-				vocabFocus: "review, goodbye, see you",
-				narrative: "Fiela reviews her day. She says, 'I helped cook, learned new things, and had fun.' Mom replies, 'I'm proud of you, Fiela.'",
+				title: "My Favorite Food",
+				setting: "Fiela writes about her favorite food",
+				vocabFocus: "write, favorite, food, love",
+				narrative: "In the afternoon, Fiela writes about her favorite food for tomorrow’s class presentation. She draws a plate of chicken and rice. At the top of the card, she writes: 'My favorite food is chicken.'",
 				dialog: [
-					{ who: "Fiela", text: "I helped cook and learned new things." },
-					{ who: "Mom", text: "I'm proud of you, Fiela." }
+					{ who: "Fiela", text: "I love chicken. It always makes me happy." }
 				],
-				image: "🌙",
-				interactive: ["📖 Review vocabulary", "🛌 Sleep now"],
-				keyPhrase: "I helped cook and learned new things.",
+				image: "📝",
+				interactive: ["📝 Click Card → read aloud", "⭐ Reward badge 'Food Explorer'"],
+				keyPhrase: "My favorite food is chicken",
 				audio: "assets/audio/units/unit4/scene8_narration.mp3"
 			}
 		]
 	},
 	{
 		id: 5,
-		title: "Celebrations",
-		emoji: "🎉",
+		title: "Let's Play Outside",
+		emoji: "⚽",
 		vocab: {
-			Verbs: ["celebrate", "dance", "sing", "eat", "drink", "play", "give", "receive", "enjoy", "thank"],
-			Nouns: ["party", "cake", "balloon", "gift", "music", "friend", "family", "holiday"],
-			Expressions: ["Happy birthday!", "Congratulations!", "Let's celebrate!", "Thank you for the gift!", "Enjoy the party!"]
+			"Outdoor & Environment": ["yard", "park", "playground", "slide", "swing", "ball", "tree", "grass", "sun", "wind"],
+			"Action Verbs": ["run", "jump", "climb", "throw", "catch", "kick", "slide", "swing", "chase", "rest"],
+			Expressions: ["Let's play!", "Be careful!", "Can I join?", "It's my turn!", "Let's take a break."]
 		},
 		scenes: [
 			{
 				id: 1,
-				title: "Birthday Party Setup",
-				setting: "Room decorated for a birthday party",
-				vocabFocus: "celebrate, party, balloon, cake",
-				narrative: "Fiela helps decorate for her birthday party. She hangs balloons and sets the table. Mom says, 'Thank you for your help, Fiela.'",
+				title: "A Sunny Afternoon",
+				setting: "The yard, the sun is bright, birds chirp",
+				vocabFocus: "sunny, outside, yard, grass",
+				narrative: "It is a sunny afternoon. Fiela looks out the window and sees the bright yard. The grass is green, and the wind is gentle. She quickly puts on her shoes.",
 				dialog: [
-					{ who: "Mom", text: "Can you help me with the decorations?" },
-					{ who: "Fiela", text: "Yes, Mom! I love decorating." }
+					{ who: "Fiela", text: "Mom, can I play outside?" },
+					{ who: "Mother", text: "Yes, but be careful!" }
 				],
-				image: "🎈",
-				interactive: ["🎉 Blow balloon", "🍰 Cut cake", "📖 Learn: celebrate"],
-				keyPhrase: "Yes, Mom! I love decorating.",
+				image: "☀️",
+				interactive: ["☀️ Click Sun → audio", "🏡 Click Yard → popup"],
+				keyPhrase: "Can I play outside",
 				audio: "assets/audio/units/unit5/scene1_narration.mp3"
 			},
 			{
 				id: 2,
-				title: "Singing Happy Birthday",
-				setting: "Everyone singing around the birthday cake",
-				vocabFocus: "sing, happy birthday, cake, wish",
-				narrative: "It's time for the birthday song! Everyone sings 'Happy Birthday' to Fiela. She makes a wish and blows out the candles.",
+				title: "Meeting Friends",
+				setting: "Front of house with friends",
+				vocabFocus: "friends, together, play, join",
+				narrative: "When Fiela steps outside, she sees Dira and two other friends standing near a tree. They wave excitedly when they see her.",
 				dialog: [
-					{ who: "Everyone", text: "Happy Birthday to you!" },
-					{ who: "Fiela", text: "Thank you, everyone!" }
+					{ who: "Friends", text: "Fiela! Let's play!" },
+					{ who: "Fiela", text: "Sure! Can I join?" },
+					{ who: "Friends", text: "Of course!" }
 				],
-				image: "🎶",
-				interactive: ["🎤 Sing along", "🎂 Make a wish", "📖 Learn: birthday"],
-				keyPhrase: "Thank you, everyone!",
+				image: "👋",
+				interactive: ["👋 Wave hello animation", "👥 Click Friend → audio"],
+				keyPhrase: "Can I join",
 				audio: "assets/audio/units/unit5/scene2_narration.mp3"
 			},
 			{
 				id: 3,
-				title: "Opening Gifts",
-				setting: "Fiela opening gifts with excitement",
-				vocabFocus: "open, gift, surprise, thank you",
-				narrative: "Fiela opens her birthday gifts. She says, 'Wow, a new book! Thank you!'",
+				title: "Ball Game Time",
+				setting: "Small field for playing",
+				vocabFocus: "ball, throw, catch, kick, run",
+				narrative: "The children start with a simple ball game. Fiela throws the ball to Dira. Dira catches it and kicks it gently to another friend. Everyone laughs and runs across the field.",
 				dialog: [
-					{ who: "Fiela", text: "Wow, a new book! Thank you!" },
-					{ who: "Mom", text: "I hope you enjoy it." }
+					{ who: "Fiela", text: "Catch this!" },
+					{ who: "Dira", text: "I got it!" }
 				],
-				image: "📦",
-				interactive: ["🎁 Unwrap gift", "📖 Read book", "📖 Learn: gift"],
-				keyPhrase: "Wow, a new book! Thank you!",
+				image: "⚽",
+				interactive: ["⚽ Ball mini-game", "🎾 Throw sound", "✋ Catch sound"],
+				keyPhrase: "Catch the ball",
 				audio: "assets/audio/units/unit5/scene3_narration.mp3"
 			},
 			{
 				id: 4,
-				title: "Playing Party Games",
-				setting: "Children playing games at the party",
-				vocabFocus: "play, game, fun, laugh",
-				narrative: "Fiela and her friends play party games. They laugh and have fun. Fiela feels happy.",
+				title: "On the Playground",
+				setting: "Playground with swings and slides",
+				vocabFocus: "playground, slide, swing, climb, turn",
+				narrative: "They move to the playground. Fiela climbs up the slide ladder. She slides down fast—whoosh! Her friends take turns on the swing.",
 				dialog: [
-					{ who: "Friend", text: "Let's play musical chairs!" },
-					{ who: "Fiela", text: "I love this game!" }
+					{ who: "Fiela", text: "It's fun!" },
+					{ who: "Friend", text: "My turn next!" }
 				],
-				image: "🎊",
-				interactive: ["🪑 Musical chairs", "🎵 Dance", "📖 Learn: game"],
-				keyPhrase: "I love this game!",
+				image: "🛝",
+				interactive: ["🛝 Slide whoosh", "🎠 Swing sound"],
+				keyPhrase: "It's so much fun",
 				audio: "assets/audio/units/unit5/scene4_narration.mp3"
 			},
 			{
 				id: 5,
-				title: "Thank You, Guests",
-				setting: "Fiela thanking her friends and family",
-				vocabFocus: "thank, guest, come, enjoy",
-				narrative: "Fiela thanks everyone for coming to her party. She says, 'I hope you enjoyed the food and games.'",
+				title: "A Small Challenge",
+				setting: "Mini obstacle course",
+				vocabFocus: "jump, step, challenge, careful",
+				narrative: "The children decide to create a small obstacle course using sticks and stones. They jump over small rocks and step carefully between the sticks. Everyone tries to finish without touching the lines.",
 				dialog: [
-					{ who: "Fiela", text: "Thank you for coming!" },
-					{ who: "Guest", text: "We had a great time, Fiela!" }
+					{ who: "Dira", text: "Be careful!" },
+					{ who: "Fiela", text: "I can do it!" }
 				],
-				image: "🙏",
-				interactive: ["🎉 Celebrate", "📖 Learn: thank you"],
-				keyPhrase: "I hope you enjoyed the food and games.",
+				image: "🤸",
+				interactive: ["🤸 Jump challenge", "🏃 Run audio"],
+				keyPhrase: "I can do it",
 				audio: "assets/audio/units/unit5/scene5_narration.mp3"
 			},
 			{
 				id: 6,
-				title: "Holiday Celebration",
-				setting: "Family celebrating a holiday together",
-				vocabFocus: "holiday, celebrate, family, together",
-				narrative: "Fiela's family celebrates a holiday. They cook special food and decorate the house. Fiela feels grateful.",
+				title: "Windy Moment",
+				setting: "Wind blows, leaves fall",
+				vocabFocus: "wind, tree, leaves, fly, cool",
+				narrative: "Suddenly, the wind blows stronger. Leaves fly around the yard like little butterflies. The children look up at the dancing branches.",
 				dialog: [
-					{ who: "Mom", text: "Let's prepare for the holiday celebration." },
-					{ who: "Fiela", text: "I'm excited to celebrate with everyone!" }
+					{ who: "Fiela", text: "Wow! The wind is cool!" },
+					{ who: "Friend", text: "Look at the leaves!" }
 				],
-				image: "🎆",
-				interactive: ["🍽️ Prepare food", "🎊 Decorate house", "📖 Learn: holiday"],
-				keyPhrase: "I'm excited to celebrate with everyone!",
+				image: "🍃",
+				interactive: ["🍃 Falling leaves animation", "💨 Wind sound"],
+				keyPhrase: "The wind is cool",
 				audio: "assets/audio/units/unit5/scene6_narration.mp3"
 			},
 			{
 				id: 7,
-				title: "New Year Countdown",
-				setting: "Everyone counting down to the New Year",
-				vocabFocus: "new year, countdown, celebrate, wish",
-				narrative: "At the New Year countdown, Fiela feels excited. Everyone counts down: 3, 2, 1... Happy New Year!",
+				title: "Taking a Break",
+				setting: "Under a big tree for shade",
+				vocabFocus: "rest, thirsty, water, shade",
+				narrative: "After running and playing, the children sit under a big tree. The shade feels cool. Fiela drinks water from her bottle. Everyone takes a slow, long breath.",
 				dialog: [
-					{ who: "Everyone", text: "Happy New Year!" },
-					{ who: "Fiela", text: "I wish for happiness and health!" }
+					{ who: "Fiela", text: "I'm thirsty." },
+					{ who: "Dira", text: "Here, have some water." }
 				],
-				image: "🎇",
-				interactive: ["🎉 Celebrate", "📖 Learn: new year"],
-				keyPhrase: "I wish for happiness and health!",
+				image: "💧",
+				interactive: ["💧 Click Bottle → water audio", "😌 Rest animation"],
+				keyPhrase: "I'm thirsty",
 				audio: "assets/audio/units/unit5/scene7_narration.mp3"
 			},
 			{
 				id: 8,
-				title: "Unit Review and Goodbye",
-				setting: "Party scene with a review board",
-				vocabFocus: "review, goodbye, see you",
-				narrative: "Fiela reviews the celebrations. She says, 'I had fun at my birthday and the holiday celebration.'",
+				title: "Time to Go Home",
+				setting: "Sunset, afternoon",
+				vocabFocus: "tired, happy, home, goodbye",
+				narrative: "The sun begins to set. The children stand up and wave goodbye to each other. Fiela feels tired but very happy.",
 				dialog: [
-					{ who: "Fiela", text: "I had fun at my birthday and the holiday celebration." },
-					{ who: "Mom", text: "I'm glad you enjoyed it, Fiela." }
+					{ who: "Friends", text: "See you tomorrow!" },
+					{ who: "Fiela", text: "See you!" }
 				],
-				image: "🎊",
-				interactive: ["📖 Review vocabulary", "🚪 Leave the party"],
-				keyPhrase: "I had fun at my birthday and the holiday celebration.",
+				image: "🌅",
+				interactive: ["👋 Goodbye wave", "🌟 Unit complete reward"],
+				keyPhrase: "See you tomorrow",
 				audio: "assets/audio/units/unit5/scene8_narration.mp3"
 			}
 		]
