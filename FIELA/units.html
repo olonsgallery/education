@@ -1,690 +1,1086 @@
-<!doctype html>
-<html lang="id">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>FIELA — Units (Kids)</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIELA — Interactive Units for Grade 4</title>
     <style>
-        :root{
-            --bg:#f0fbff; --card:#ffffff; --muted:#5b6b7a; --accent:#0b6b9a;
-            --primary:#2aa9df; --secondary:#ffb04c; --accent2:#7bd389;
-            font-family: "Poppins", Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        :root {
+            --bg: #f0fbff;
+            --card: #ffffff;
+            --muted: #5b6b7a;
+            --accent: #0b6b9a;
+            --primary: #2aa9df;
+            --secondary: #ffb04c;
+            --accent2: #7bd389;
         }
-        html,body{height:100%;margin:0;background:
-            radial-gradient(1200px 400px at 10% 0%, rgba(42,169,223,0.06), transparent 10%),
-            radial-gradient(1000px 300px at 90% 100%, rgba(123,211,137,0.04), transparent 10%),
-            linear-gradient(180deg,#e7fbff 0%,var(--bg) 100%);
-            color:#07314a; font-size:16px;}
-        header{
-            padding:20px 18px;display:flex;align-items:center;gap:14px;
-            border-bottom: 2px dashed rgba(8,30,60,0.04);
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            min-height: 100%;
+            background: radial-gradient(1200px 400px at 10% 0%, rgba(42, 169, 223, 0.06), transparent 10%),
+                        radial-gradient(1000px 300px at 90% 100%, rgba(123, 211, 137, 0.04), transparent 10%),
+                        linear-gradient(180deg, #e7fbff 0%, var(--bg) 100%);
+            color: #07314a;
+            font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
+            font-size: 16px;
         }
-        header h1{margin:0;font-size:20px;letter-spacing:0.4px}
-        header small{display:block;color:var(--muted)}
-        .container{max-width:1100px;margin:16px auto;padding:12px}
-        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-        .unit{
-            background:linear-gradient(180deg, rgba(255,255,255,0.98), var(--card));
-            border-radius:14px;padding:14px;box-shadow:0 10px 30px rgba(6,30,60,0.06);
-            display:flex;flex-direction:column;gap:10px;transition:transform .16s ease;
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-bottom: 2px dashed rgba(8, 30, 60, 0.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
         }
-        .unit:hover{transform:translateY(-6px)}
-        .unit .unit-top{display:flex;align-items:center;gap:12px}
-        .avatar{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 6px 14px rgba(10,40,80,0.06)}
-        .unit h2{margin:0;font-size:18px;color:var(--accent)}
-        .meta{font-size:13px;color:var(--muted)}
-        .vocab{background:linear-gradient(180deg, rgba(238,247,255,0.9), rgba(255,255,255,0.95));padding:10px;border-radius:10px;font-size:13px;color:#07385b}
-        .scenes{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-        .scene-btn{
-            background:linear-gradient(180deg,#fff,#f7fbff);border:0;padding:10px 12px;border-radius:12px;font-size:14px;cursor:pointer;
-            box-shadow:0 6px 18px rgba(11,49,74,0.06);display:inline-flex;align-items:center;gap:8px;min-width:140px;
-            transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+
+        header h1 { margin: 0 0 4px 0; font-size: 24px; color: #0b6b9a; }
+        header small { color: var(--muted); font-size: 14px; }
+
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 14px;
+            flex-wrap: wrap;
         }
-        .scene-btn .emoji{font-size:18px}
-        .scene-btn:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(10,40,80,0.10); background:linear-gradient(90deg, #fff, rgba(255,247,232,0.8))}
-        .scene-btn:active{transform:translateY(0)}
-        .footer{margin-top:10px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--muted)}
-        .search{padding:12px 14px;border-radius:12px;border:1px solid rgba(8,30,60,0.06);width:100%;max-width:360px;font-size:15px}
-        .badge{background:var(--secondary);color:#fff;padding:6px 10px;border-radius:999px;font-weight:600;box-shadow:0 6px 14px rgba(255,176,76,0.12)}
-        /* modal */
-        .modal-backdrop{position:fixed;inset:0;background:rgba(7,14,25,0.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:1200}
-        .modal{background:var(--card);width:100%;max-width:860px;border-radius:14px;padding:16px;box-shadow:0 30px 60px rgba(6,12,30,0.45);max-height:92vh;overflow:auto;border:2px solid rgba(255,255,255,0.6)}
-        .modal h3{margin:0 0 8px 0;display:flex;align-items:center;gap:10px;font-size:18px}
-        .row{display:flex;gap:12px;flex-wrap:wrap}
-        .k{font-weight:700;color:var(--accent);font-size:13px}
-        .close{margin-left:auto;background:#efefef;border:0;padding:8px 12px;border-radius:10px;cursor:pointer}
-        .chip{background:#eef7ff;padding:6px 8px;border-radius:999px;font-size:12px;color:#09457a}
-        .dialog-wrap{margin-top:12px}
-        .chat{display:flex;flex-direction:column;gap:10px}
-        .bubble{max-width:78%;padding:10px 12px;border-radius:14px;font-size:15px;line-height:1.35;box-shadow:0 8px 18px rgba(10,30,50,0.06)}
-        .bubble .who{font-weight:700;font-size:13px;display:block;margin-bottom:6px;color:#063a59}
-        .bubble.me{align-self:flex-end;background:linear-gradient(180deg,#dff8ff,#bfeef5);border:1px solid rgba(7,100,140,0.06)}
-        .bubble.them{align-self:flex-start;background:linear-gradient(180deg,#fff8e6,#fff3da);border:1px solid rgba(160,120,45,0.06)}
-        .controls{display:flex;gap:8px;margin-top:12px;align-items:center}
-        .control-btn{background:var(--primary);color:#fff;padding:10px 12px;border-radius:10px;border:0;cursor:pointer;box-shadow:0 8px 20px rgba(42,169,223,0.14)}
-        .control-btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
-        .small{font-size:13px;color:var(--muted)}
-        @media (max-width:480px){header{flex-direction:column;align-items:flex-start} .row{flex-direction:column} .scene-btn{min-width:unset;width:100%;justify-content:flex-start}}
+
+        .search {
+            flex: 1;
+            min-width: 240px;
+            padding: 10px 14px;
+            border: 1px solid rgba(8, 30, 60, 0.1);
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .badge { background: var(--secondary); color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 12px; }
+
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 16px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .unit {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), var(--card));
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 8px 24px rgba(6, 30, 60, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .unit:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(6, 30, 60, 0.12); }
+
+        .unit-header { display: flex; align-items: center; gap: 14px; }
+
+        .unit-avatar { width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 32px; background: linear-gradient(135deg, rgba(42, 169, 223, 0.1), rgba(123, 211, 137, 0.1)); }
+
+        .unit h2 { margin: 0; font-size: 18px; color: var(--accent); }
+        .unit .meta { font-size: 12px; color: var(--muted); }
+
+        .vocab-preview {
+            background: linear-gradient(180deg, rgba(238, 247, 255, 0.95), rgba(255, 255, 255, 0.98));
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #09457a;
+        }
+
+        .vocab-preview strong { color: var(--accent); }
+
+        .scenes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .scene-btn {
+            background: linear-gradient(180deg, #fff, #f7fbff);
+            border: 1px solid rgba(11, 107, 154, 0.08);
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scene-btn:hover { background: linear-gradient(180deg, #fff, rgba(223, 248, 255, 0.9)); box-shadow: 0 4px 12px rgba(11, 107, 154, 0.12); transform: translateX(4px); }
+        .scene-btn:active { transform: translateX(2px); }
+
+        .scene-emoji { font-size: 18px; }
+        .scene-title { font-weight: 500; color: #07314a; }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 14, 25, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 1200;
+            overflow-y: auto;
+        }
+
+        .modal-backdrop.active { display: flex; }
+
+        .modal {
+            background: var(--card);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .modal-header h3 { margin: 0; flex: 1; font-size: 20px; color: var(--accent); }
+        .close-btn { background: #efefef; border: 0; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .close-btn:hover { background: #e0e0e0; }
+
+        .modal-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; background: #f7fbff; border-radius: 10px; margin-bottom: 12px; font-size: 13px; }
+        .meta-item strong { color: var(--accent); display: block; margin-bottom: 4px; }
+
+        .scene-image { width: 100%; max-height: 300px; object-fit: cover; border-radius: 12px; margin: 12px 0; }
+
+        .narrative { line-height: 1.6; color: #333; margin: 12px 0; }
+
+        .dialog-section { margin: 16px 0; }
+        .dialog-section h4 { margin: 0 0 10px 0; color: var(--accent); font-size: 14px; }
+
+        .chat-bubble { display: flex; flex-direction: column; gap: 8px; }
+        .bubble {
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.4;
+            max-width: 80%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .bubble-who { font-weight: 700; font-size: 12px; color: #063a59; margin-bottom: 4px; }
+        .bubble.fiela { align-self: flex-end; background: linear-gradient(180deg, #dff8ff, #bfeef5); border: 1px solid rgba(7, 100, 140, 0.1); }
+        .bubble.other { align-self: flex-start; background: linear-gradient(180deg, #fff8e6, #fff3da); border: 1px solid rgba(160, 120, 45, 0.1); }
+
+        .interactive-section {
+            background: linear-gradient(180deg, rgba(123, 211, 137, 0.08), rgba(123, 211, 137, 0.04));
+            padding: 12px;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent2);
+            margin: 12px 0;
+        }
+
+        .interactive-section h4 { margin: 0 0 8px 0; color: var(--accent2); font-size: 13px; }
+
+        .interactive-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        .interactive-btn {
+            background: var(--accent2);
+            color: white;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 0;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .interactive-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(123, 211, 137, 0.3); }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 0;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(42, 169, 223, 0.2); }
+        .control-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .progress-bar { width: 100%; height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden; margin: 8px 0; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--primary)); }
+
+        @media (max-width: 768px) {
+            .modal-meta { grid-template-columns: 1fr; }
+            .bubble { max-width: 95%; }
+            .controls { flex-direction: column; }
+            .control-btn { width: 100%; }
+            .grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
     <header>
-        <div>
-            <h1>FIELA — Main Page (Units) <span class="small">— Seru & Ramah Anak</span></h1>
-            <small>5 Units • 8 Scenes each — Cerita interaktif untuk kelas 4 SD</small>
-        </div>
-        <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
-            <input id="search" class="search" placeholder="Cari unit, adegan, atau kata (mis. 'toothbrush')" />
-            <div class="badge">Level 4</div>
+        <h1>🌟 FIELA — Interactive English Learning Units</h1>
+        <small>5 Units • 8 Scenes each • Perfect for Grade 4 Students</small>
+        <div class="search-bar">
+            <input id="searchInput" class="search" placeholder="Search units or vocabulary (e.g., 'toothbrush', 'family')...">
+            <span class="badge">⭐ Grade 4</span>
         </div>
     </header>
 
-    <main class="container" id="app">
-        <section class="grid" id="unitsGrid">
-            <!-- Units rendered by script -->
-        </section>
+    <main class="container">
+        <section class="grid" id="unitsGrid"></section>
     </main>
 
     <!-- Scene Modal -->
-    <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
-        <article class="modal" id="sceneModal" role="document">
-            <div style="display:flex;gap:12px;align-items:center">
+    <div id="modalBackdrop" class="modal-backdrop">
+        <article class="modal">
+            <div class="modal-header">
                 <h3 id="modalTitle"></h3>
-                <button class="close" id="closeModal" aria-label="Close dialog">Tutup ✖</button>
-            </div>
-            <div class="row" style="margin-top:10px">
-                <div style="flex:1;min-width:240px">
-                    <div><span class="k">Setting:</span> <span id="modalSetting"></span></div>
-                    <div style="margin-top:8px"><span class="k">Kata fokus:</span> <span id="modalVocab"></span></div>
-                </div>
-                <div style="min-width:180px;display:flex;align-items:center;justify-content:flex-end">
-                    <div class="chip" id="modalInteractive">Interaktif</div>
-                </div>
+                <button id="closeModal" class="close-btn">✖ Close</button>
             </div>
 
-            <section class="dialog-wrap">
-                <h4 style="margin:10px 0 6px 0">Cerita</h4>
-                <p id="modalNarrative" style="margin:0 0 12px 0;line-height:1.5"></p>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 
-                <h4 style="margin:8px 0 6px 0">Dialog</h4>
-                <div id="modalDialog" class="chat" style="margin-bottom:8px"></div>
-
-                <div class="controls">
-                    <button id="prevScene" class="control-btn" aria-label="Previous scene">← Sebelumnya</button>
-                    <button id="nextScene" class="control-btn" aria-label="Next scene">Berikutnya →</button>
-                    <button id="playAudio" class="scene-btn" style="margin-left:auto">🔊 Putar audio (Contoh)</button>
-                    <button id="vocabListBtn" class="scene-btn">📚 Kosakata unit</button>
+            <div class="modal-meta">
+                <div class="meta-item">
+                    <strong>Setting:</strong> <span id="modalSetting"></span>
                 </div>
-            </section>
+                <div class="meta-item">
+                    <strong>Vocabulary Focus:</strong> <span id="modalVocab"></span>
+                </div>
+            </div>
+
+            <img id="sceneImage" class="scene-image" alt="Scene illustration">
+
+            <div class="narrative" id="modalNarrative"></div>
+
+            <div class="dialog-section">
+                <h4>💬 Dialog</h4>
+                <div id="modalDialog" class="chat-bubble"></div>
+            </div>
+
+            <div class="interactive-section">
+                <h4>🎮 Interactive Elements</h4>
+                <div id="interactiveButtons" class="interactive-buttons"></div>
+            </div>
+
+            <div class="controls">
+                <button id="prevBtn" class="control-btn">← Previous Scene</button>
+                <button id="nextBtn" class="control-btn">Next Scene →</button>
+                <button id="vocabBtn" class="scene-btn" style="margin-left: auto;">📚 Unit Vocabulary</button>
+            </div>
         </article>
     </div>
 
     <script>
-        // emoji per unit untuk suasana
-        const unitEmoji = {1:'🌞',2:'🏠',3:'🏫',4:'🍽️',5:'⚽'};
+        const unitEmoji = { 1: '🌞', 2: '👨‍👩‍👧‍👦', 3: '🏫', 4: '🍽️', 5: '⚽' };
 
-        // Data model (units + scenes)
-        const units = [ /* same data as before (omitted here for brevity) */ ];
+        const units = [
+            {
+                id: 1,
+                title: "My Morning Routine",
+                emoji: '🌞',
+                vocab: {
+                    Verbs: ["wake up", "stretch", "yawn", "brush", "wash", "get dressed", "pack", "eat", "walk", "run"],
+                    Nouns: ["alarm clock", "bed", "bathroom", "toothbrush", "towel", "breakfast", "bag", "uniform", "shoes"],
+                    Expressions: ["Good morning!", "I'm coming!", "Hurry up!", "I'm ready!", "Let's go!"]
+                },
+                scenes: [
+                    {
+                        id: 1,
+                        title: "Wake Up, Fiela!",
+                        setting: "Bedroom with morning sunlight streaming through window",
+                        vocabFocus: "wake up, stretch, yawn, alarm clock",
+                        narrative: "The alarm clock rings loudly. Ring! Ring! Ring! Fiela slowly opens her eyes. She stretches her arms and lets out a big yawn. Her room is bright and warm. The sun is shining through the window. She whispers softly, 'Good morning…'",
+                        dialog: [
+                            { who: "Mom", text: "Fiela, wake up! It's time for school!" },
+                            { who: "Fiela", text: "Okay, Mom… I'm waking up." }
+                        ],
+                        image: "🏠",
+                        interactive: ["🔔 Ring the alarm", "😴 Yawn sound", "📖 Learn: stretch"],
+                        keyPhrase: "Good morning"
+                    },
+                    {
+                        id: 2,
+                        title: "To the Bathroom!",
+                        setting: "Bathroom with toothbrush and running water",
+                        vocabFocus: "brush, wash, toothbrush, water, towel",
+                        narrative: "Fiela walks to the bathroom. She picks up her blue toothbrush. She brushes her teeth carefully. Brush, brush, brush! Then she washes her face with cool water. It feels fresh. She dries her face with a soft towel.",
+                        dialog: [
+                            { who: "Fiela", text: "The water is cold!" },
+                            { who: "Mom (from outside)", text: "Don't forget your ears!" }
+                        ],
+                        image: "🚿",
+                        interactive: ["💧 Water splashing", "🪥 Brush animation", "📖 Learn: fresh"],
+                        keyPhrase: "The water is cold"
+                    },
+                    {
+                        id: 3,
+                        title: "Shower Time",
+                        setting: "Shower with warm water and soap bubbles",
+                        vocabFocus: "bath, soap, bubbles, clean",
+                        narrative: "Fiela steps into the shower. Warm water falls gently. She rubs soap on her arms and legs. Bubbles float in the air. She feels clean and ready for the day.",
+                        dialog: [
+                            { who: "Fiela", text: "I love bubbles!" }
+                        ],
+                        image: "🛁",
+                        interactive: ["🫧 Create bubbles", "🛁 Bath sounds", "📖 Learn: clean"],
+                        keyPhrase: "I love bubbles"
+                    },
+                    {
+                        id: 4,
+                        title: "Choosing an Outfit",
+                        setting: "Bedroom with open closet and school clothes",
+                        vocabFocus: "uniform, shirt, skirt, shoes, get dressed",
+                        narrative: "Fiela opens her wardrobe. She sees her school uniform neatly folded. She puts on her shirt, her skirt, and her white socks. Then she ties her shoelaces slowly.",
+                        dialog: [
+                            { who: "Fiela", text: "I'm almost ready!" },
+                            { who: "Mom", text: "Good job! Don't forget your shoes." }
+                        ],
+                        image: "👗",
+                        interactive: ["👕 Shirt sound", "👗 Uniform colors", "👟 Shoes game"],
+                        keyPhrase: "I'm almost ready"
+                    },
+                    {
+                        id: 5,
+                        title: "Breakfast with Mom",
+                        setting: "Dining table with simple breakfast",
+                        vocabFocus: "breakfast, rice, egg, milk, spoon",
+                        narrative: "Fiela sits at the dining table. Her mom has prepared rice, an egg, and a glass of milk. The food smells nice and warm. Fiela takes a moment before eating. Then, Fiela eats her breakfast happily.",
+                        dialog: [
+                            { who: "Mom", text: "Eat slowly." },
+                            { who: "Fiela", text: "Okay, Mom. This egg is yummy!" }
+                        ],
+                        image: "🥣",
+                        interactive: ["🥛 Milk", "🥚 Egg", "📖 Learn: spoon"],
+                        keyPhrase: "This egg is yummy"
+                    },
+                    {
+                        id: 6,
+                        title: "Packing the Bag",
+                        setting: "Near the door with school bag and items",
+                        vocabFocus: "bag, book, bottle, pack",
+                        narrative: "After breakfast, Fiela packs her school bag. She puts in her book, her pencil case, and her water bottle. Her bag is a little heavy, but she can carry it.",
+                        dialog: [
+                            { who: "Fiela", text: "Mom, I'm ready!" },
+                            { who: "Mom", text: "Great! Let's go." }
+                        ],
+                        image: "🎒",
+                        interactive: ["🎒 Bag sounds", "📚 Book", "💧 Water bottle"],
+                        keyPhrase: "Mom I'm ready"
+                    },
+                    {
+                        id: 7,
+                        title: "Walking to School",
+                        setting: "Morning walks with birds and friends nearby",
+                        vocabFocus: "walk, run, school, friend",
+                        narrative: "Fiela walks outside. The air is fresh. Birds are singing on the tree. She sees her friend, Dira, waving from across the street. They walk together toward school.",
+                        dialog: [
+                            { who: "Dira", text: "Good morning, Fiela!" },
+                            { who: "Fiela", text: "Good morning! Let's walk together." }
+                        ],
+                        image: "🚶",
+                        interactive: ["🐦 Bird sounds", "👋 Wave greeting", "📖 Learn: friend"],
+                        keyPhrase: "Good morning let's walk together"
+                    },
+                    {
+                        id: 8,
+                        title: "Ready for Class!",
+                        setting: "School gate with morning atmosphere",
+                        vocabFocus: "ready, school, hello, morning",
+                        narrative: "Fiela reaches the school gate. She feels happy and ready to learn. She waves goodbye to her mom and walks into her classroom. Today is going to be a great learning day!",
+                        dialog: [
+                            { who: "Mom", text: "Have a great day!" },
+                            { who: "Fiela", text: "Thank you, Mom!" }
+                        ],
+                        image: "🏫",
+                        interactive: ["🎓 School", "👋 Wave goodbye", "⭐ Unit Complete"],
+                        keyPhrase: "Have a great day"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "My Family",
+                emoji: '👨‍👩‍👧‍👦',
+                vocab: {
+                    "Family": ["mother", "father", "sister", "brother", "grandmother", "grandfather"],
+                    "House": ["living room", "kitchen", "table", "photo", "chair"],
+                    "Actions": ["help", "cook", "read", "talk", "play", "hug"],
+                    "Expressions": ["This is my…", "Let me help!", "Come here!", "Thank you!", "I love you!"]
+                },
+                scenes: [
+                    {
+                        id: 1,
+                        title: "Sunday Morning at Home",
+                        setting: "Fiela's house, warm morning atmosphere",
+                        vocabFocus: "morning, family, living room, together",
+                        narrative: "It is Sunday morning. Fiela wakes up feeling happy. Today, her whole family is at home. She walks to the living room and sees her mother, father, and little sister sitting together.",
+                        dialog: [
+                            { who: "Fiela", text: "Good morning, everyone!" },
+                            { who: "Mother", text: "Good morning, Fiela!" }
+                        ],
+                        image: "🏠",
+                        interactive: ["🛋️ Living room", "👨‍👩‍👧 Family together", "💕 Family love"],
+                        keyPhrase: "Good morning everyone"
+                    },
+                    {
+                        id: 2,
+                        title: "Helping Mom in the Kitchen",
+                        setting: "Kitchen with vegetables and stove",
+                        vocabFocus: "mother, kitchen, cook, vegetables, help",
+                        narrative: "Fiela goes to the kitchen. Her mother is cutting vegetables. The kitchen smells delicious. Fiela puts on a small apron. She wants to help.",
+                        dialog: [
+                            { who: "Fiela", text: "Mom, let me help!" },
+                            { who: "Mother", text: "Of course! Please wash the carrots." }
+                        ],
+                        image: "👩‍🍳",
+                        interactive: ["🥕 Carrot", "💧 Wash", "🍳 Cook"],
+                        keyPhrase: "Let me help"
+                    },
+                    {
+                        id: 3,
+                        title: "Dad's Quiet Corner",
+                        setting: "Dad sitting in a chair reading newspaper",
+                        vocabFocus: "father, read, chair, newspaper, quiet",
+                        narrative: "Fiela walks to the corner of the living room. Her father is reading the newspaper in his favorite chair. He smiles softly when he sees Fiela.",
+                        dialog: [
+                            { who: "Father", text: "Good morning, sweetheart." },
+                            { who: "Fiela", text: "What are you reading, Dad?" },
+                            { who: "Father", text: "Just the morning news." }
+                        ],
+                        image: "📰",
+                        interactive: ["📖 Read", "🪑 Chair", "😊 Dad smile"],
+                        keyPhrase: "What are you reading"
+                    },
+                    {
+                        id: 4,
+                        title: "Playing with Little Sister",
+                        setting: "Playroom with toys and colorful blocks",
+                        vocabFocus: "sister, toys, play, blocks, share",
+                        narrative: "In the play area, Fiela's little sister, Mila, is building a tower with colorful blocks. The tower is tall and wobbly. Fiela sits beside her and helps her add another block on top.",
+                        dialog: [
+                            { who: "Mila", text: "Play with me!" },
+                            { who: "Fiela", text: "Okay! Let's share the blocks." }
+                        ],
+                        image: "🧱",
+                        interactive: ["🧱 Block game", "👧 Sister", "🎮 Share"],
+                        keyPhrase: "Let's share the blocks"
+                    },
+                    {
+                        id: 5,
+                        title: "A Visit from Grandma",
+                        setting: "Front door with Grandma and shopping bag",
+                        vocabFocus: "grandmother, visit, hug, bag",
+                        narrative: "Ding dong! The doorbell rings. Fiela runs to the door. It is her grandmother! She gives Fiela a warm hug.",
+                        dialog: [
+                            { who: "Grandma", text: "I brought some fresh fruit for you!" },
+                            { who: "Fiela", text: "Thank you, Grandma!" }
+                        ],
+                        image: "👵",
+                        interactive: ["🎁 Gift bag", "🤗 Hug", "🍎 Fruit"],
+                        keyPhrase: "Thank you grandma"
+                    },
+                    {
+                        id: 6,
+                        title: "Grandpa's Story Time",
+                        setting: "Grandpa on porch with wooden cane",
+                        vocabFocus: "grandfather, story, chair, afternoon, laugh",
+                        narrative: "Grandpa sits on the porch with his wooden cane. He loves telling stories from his childhood. Fiela sits close to him and listens carefully.",
+                        dialog: [
+                            { who: "Grandfather", text: "Did I ever tell you about the mango tree?" },
+                            { who: "Fiela", text: "No, Grandpa! Tell me!" }
+                        ],
+                        image: "👴",
+                        interactive: ["📖 Listen story", "🥭 Mango tree", "😄 Grandpa laugh"],
+                        keyPhrase: "Tell me a story"
+                    },
+                    {
+                        id: 7,
+                        title: "Family Photo Time",
+                        setting: "All family members gather in living room",
+                        vocabFocus: "photo, smile, together, family",
+                        narrative: "Mother takes out her phone. 'Let's take a family photo!' she says. Everyone gathers in the living room. They smile brightly—click!—a beautiful picture is taken.",
+                        dialog: [
+                            { who: "Father", text: "One more! Say cheese!" },
+                            { who: "All", text: "Cheese!" }
+                        ],
+                        image: "📸",
+                        interactive: ["📸 Camera", "😊 Smile", "✨ Flash"],
+                        keyPhrase: "Say cheese"
+                    },
+                    {
+                        id: 8,
+                        title: "A Lovely Ending",
+                        setting: "Twilight in the living room",
+                        vocabFocus: "happy, love, home, evening",
+                        narrative: "In the evening, the family sits together once again. They laugh, talk, and enjoy the quiet night. Fiela looks at everyone and feels warm inside. 'This is my family,' she thinks. 'I love them so much.'",
+                        dialog: [
+                            { who: "Mother", text: "Did you have a good day?" },
+                            { who: "Fiela", text: "Yes, Mom. The best day!" }
+                        ],
+                        image: "❤️",
+                        interactive: ["❤️ Family love", "🏠 Home", "⭐ Unit Complete"],
+                        keyPhrase: "I love you all"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "In the Classroom",
+                emoji: '🏫',
+                vocab: {
+                    "Objects": ["book", "pencil", "eraser", "bag", "table", "chair", "board", "marker", "clock", "window"],
+                    "Actions": ["sit", "stand", "write", "read", "listen", "raise your hand", "open", "close", "point"],
+                    "Expressions": ["Good morning class!", "I don't understand", "Can you help me?", "May I go to the toilet?", "Let's work together!", "Very good!"]
+                },
+                scenes: [
+                    {
+                        id: 1,
+                        title: "Entering the Classroom",
+                        setting: "Classroom before lesson starts, bright and full of posters",
+                        vocabFocus: "classroom, bag, desk, chair, board",
+                        narrative: "The bell rings. Ding-dong! Fiela walks into her classroom. She puts her bag beside her desk and sits on her favorite chair. The room is bright and full of colorful posters. Her friends are taking out their books.",
+                        dialog: [
+                            { who: "Teacher (Ms. Rani)", text: "Good morning, class!" },
+                            { who: "Students", text: "Good morning, Teacher!" }
+                        ],
+                        image: "🏫",
+                        interactive: ["🕐 Clock", "🪑 Desk", "📚 Books"],
+                        keyPhrase: "Good morning teacher"
+                    },
+                    {
+                        id: 2,
+                        title: "Time to Start",
+                        setting: "Teacher at whiteboard with colored markers",
+                        vocabFocus: "teacher, board, marker, write, listen",
+                        narrative: "Ms. Rani walks to the board. She picks up a blue marker. She writes the topic of the day: 'My Favorite Things'. The students listen quietly.",
+                        dialog: [
+                            { who: "Teacher", text: "Today, we learn new words. Please listen carefully." },
+                            { who: "Fiela (whispering to Dira)", text: "I like the blue marker!" }
+                        ],
+                        image: "📝",
+                        interactive: ["✏️ Marker writing", "📋 Board", "👂 Listen"],
+                        keyPhrase: "Please listen carefully"
+                    },
+                    {
+                        id: 3,
+                        title: "Learning New Words",
+                        setting: "Teacher shows picture cards",
+                        vocabFocus: "book, pencil, eraser, ruler, repeat",
+                        narrative: "Ms. Rani shows four picture cards: a book, a pencil, an eraser, and a ruler. She holds each card high so everyone can see.",
+                        dialog: [
+                            { who: "Teacher", text: "Repeat after me: book." },
+                            { who: "Students", text: "Book!" },
+                            { who: "Teacher", text: "Pencil." },
+                            { who: "Students", text: "Pencil!" }
+                        ],
+                        image: "📚",
+                        interactive: ["📚 Book sound", "✏️ Pencil sound", "🎮 Match game"],
+                        keyPhrase: "Book pencil eraser"
+                    },
+                    {
+                        id: 4,
+                        title: "Pair Work with Dira",
+                        setting: "Fiela paired up with Dira at desks",
+                        vocabFocus: "pair, help, ask, answer, talk",
+                        narrative: "The students work in pairs. Fiela and Dira sit together and practice asking and answering questions. They smile and help each other pronounce the words correctly.",
+                        dialog: [
+                            { who: "Dira", text: "What is this?" },
+                            { who: "Fiela", text: "It's an eraser!" },
+                            { who: "Fiela", text: "Your turn!" },
+                            { who: "Dira", text: "Okay!" }
+                        ],
+                        image: "👥",
+                        interactive: ["👥 Pair work", "💬 Questions", "🤝 Help each other"],
+                        keyPhrase: "What is this"
+                    },
+                    {
+                        id: 5,
+                        title: "A Little Problem",
+                        setting: "Fiela's book falls on the floor",
+                        vocabFocus: "fall, pick up, careful, understand",
+                        narrative: "Suddenly, Fiela's book falls to the floor with a soft thud. She bends down to pick it up. But she doesn't understand one word on the page.",
+                        dialog: [
+                            { who: "Fiela", text: "Teacher, I don't understand this word." },
+                            { who: "Teacher", text: "Let me help you, Fiela." }
+                        ],
+                        image: "📖",
+                        interactive: ["📚 Pick up book", "🤔 Think", "🙋 Raise hand"],
+                        keyPhrase: "I don't understand"
+                    },
+                    {
+                        id: 6,
+                        title: "Teacher's Explanation",
+                        setting: "Teacher explains with visual cards and gestures",
+                        vocabFocus: "point, show, say, meaning",
+                        narrative: "Ms. Rani comes to Fiela's desk. She points at the word and shows a picture card that matches it. Her explanation is clear and simple.",
+                        dialog: [
+                            { who: "Teacher", text: "This word means 'clean'. Repeat after me." },
+                            { who: "Fiela", text: "Clean." },
+                            { who: "Teacher", text: "Very good!" }
+                        ],
+                        image: "✨",
+                        interactive: ["👉 Point", "📖 Show card", "🔤 Learn word"],
+                        keyPhrase: "Clean means tidy"
+                    },
+                    {
+                        id: 7,
+                        title: "Group Activity: Classroom Hunt",
+                        setting: "Object search activity around the classroom",
+                        vocabFocus: "find, look for, window, clock, bag, chair",
+                        narrative: "It's activity time! Ms. Rani says: 'Find three things in the classroom!' The students walk around excitedly.",
+                        dialog: [
+                            { who: "Fiela", text: "I found the clock!" },
+                            { who: "Dira", text: "I found a window!" }
+                        ],
+                        image: "🔍",
+                        interactive: ["🔍 Scavenger hunt", "🕐 Clock", "🪟 Window"],
+                        keyPhrase: "I found the clock"
+                    },
+                    {
+                        id: 8,
+                        title: "Closing Time",
+                        setting: "End of lesson, students clean up desks",
+                        vocabFocus: "clean up, put away, goodbye, see you",
+                        narrative: "The class is almost over. Students put away their pencils and close their books. The room becomes quiet again.",
+                        dialog: [
+                            { who: "Teacher", text: "Good job today, class. See you tomorrow!" },
+                            { who: "Students", text: "See you, Teacher!" }
+                        ],
+                        image: "👋",
+                        interactive: ["🧹 Clean up", "👋 Say goodbye", "⭐ Unit Complete"],
+                        keyPhrase: "See you tomorrow teacher"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "My Favorite Food",
+                emoji: '🍽️',
+                vocab: {
+                    "Food": ["rice", "noodles", "chicken", "fish", "vegetables", "fruit", "soup", "egg", "water"],
+                    "Taste": ["sweet", "salty", "spicy", "crunchy", "warm", "delicious", "fresh"],
+                    "Actions": ["eat", "cook", "wash", "cut", "mix", "taste", "choose", "enjoy"],
+                    "Expressions": ["My favorite food is…", "I like…", "I don't like…", "Can I try?", "This is yummy!", "Let's eat!"]
+                },
+                scenes: [
+                    {
+                        id: 1,
+                        title: "What's for Lunch?",
+                        setting: "Kitchen with warm food aromas",
+                        vocabFocus: "lunch, food, smell, delicious",
+                        narrative: "It is almost lunchtime. Fiela walks into the kitchen and smells something delicious. Her stomach growls softly. She wonders what her mother is cooking today.",
+                        dialog: [
+                            { who: "Fiela", text: "Mom, what's for lunch?" },
+                            { who: "Mother", text: "Come and see!" }
+                        ],
+                        image: "🍳",
+                        interactive: ["🍳 Cooking sounds", "👃 Delicious smell", "😋 Yummy"],
+                        keyPhrase: "What's for lunch"
+                    },
+                    {
+                        id: 2,
+                        title: "Helping in the Kitchen",
+                        setting: "Kitchen with vegetables and ingredients",
+                        vocabFocus: "vegetables, chicken, egg, wash, cut",
+                        narrative: "On the table, there are fresh vegetables, pieces of chicken, and two eggs. Mother washes the vegetables under running water. She cuts the carrots and mixes them with other ingredients.",
+                        dialog: [
+                            { who: "Fiela", text: "Can I help?" },
+                            { who: "Mother", text: "Yes, please wash the tomatoes." }
+                        ],
+                        image: "🥕",
+                        interactive: ["🍅 Wash tomatoes", "🥕 Cut vegetables", "🍗 Chicken"],
+                        keyPhrase: "Can I help"
+                    },
+                    {
+                        id: 3,
+                        title: "Tasting the Soup",
+                        setting: "Soup pot with warm steam rising",
+                        vocabFocus: "soup, warm, taste, spoon",
+                        narrative: "A pot of warm soup is boiling gently. Mother dips a wooden spoon and tastes it. She smiles happily.",
+                        dialog: [
+                            { who: "Mother", text: "The soup is ready. Do you want to try?" },
+                            { who: "Fiela", text: "Yes, please!" }
+                        ],
+                        image: "🍲",
+                        interactive: ["🍲 Soup", "🥄 Spoon", "🌡️ Warm"],
+                        keyPhrase: "Yes please"
+                    },
+                    {
+                        id: 4,
+                        title: "Choosing My Favorite Food",
+                        setting: "Dining table with variety of food",
+                        vocabFocus: "rice, chicken, fruit, choose, favorite",
+                        narrative: "Lunch is ready! On the dining table, there is rice, chicken, soup, and a bowl of fresh fruit. Fiela looks at everything carefully. She wants to choose her favorite food.",
+                        dialog: [
+                            { who: "Fiela", text: "Hmm… I like chicken. It's my favorite!" },
+                            { who: "Mother", text: "Good choice!" }
+                        ],
+                        image: "🍗",
+                        interactive: ["🍗 Chicken", "🍚 Rice", "🎮 Choose"],
+                        keyPhrase: "Chicken is my favorite"
+                    },
+                    {
+                        id: 5,
+                        title: "Eating Together",
+                        setting: "Family eating together at the table",
+                        vocabFocus: "eat, drink, enjoy, glass, water",
+                        narrative: "Fiela sits with her family. They take a short moment together before eating. Then they begin their meal. Fiela eats her rice and chicken happily and drinks a glass of cool water.",
+                        dialog: [
+                            { who: "Father", text: "How is the food?" },
+                            { who: "Fiela", text: "It's yummy!" }
+                        ],
+                        image: "👨‍👩‍👧",
+                        interactive: ["🥤 Water glass", "😋 Yummy", "🍚 Eat together"],
+                        keyPhrase: "It's yummy"
+                    },
+                    {
+                        id: 6,
+                        title: "A Spicy Surprise",
+                        setting: "Chili sauce beside the plate",
+                        vocabFocus: "spicy, try, small, careful",
+                        narrative: "Next to the rice, there is a small spoon of chili sauce. Fiela looks at it curiously. She touches a tiny bit with her finger. Her eyes widen. 'It's spicy!' she laughs.",
+                        dialog: [
+                            { who: "Fiela", text: "Can I try this?" },
+                            { who: "Mother", text: "Just a little. It's spicy!" }
+                        ],
+                        image: "🌶️",
+                        interactive: ["🌶️ Spicy!", "🔥 Hot", "😅 Laugh"],
+                        keyPhrase: "It's spicy"
+                    },
+                    {
+                        id: 7,
+                        title: "Fruit Time!",
+                        setting: "Colorful fruit bowls",
+                        vocabFocus: "apple, banana, mango, sweet, fresh",
+                        narrative: "After lunch, it's fruit time. Fiela picks a slice of mango. It is sweet and fresh.",
+                        dialog: [
+                            { who: "Dira (voice note)", text: "What are you eating?" },
+                            { who: "Fiela", text: "A sweet mango!" }
+                        ],
+                        image: "🥭",
+                        interactive: ["🥭 Mango", "🍌 Banana", "🍎 Apple"],
+                        keyPhrase: "A sweet mango"
+                    },
+                    {
+                        id: 8,
+                        title: "My Favorite Food",
+                        setting: "Fiela writes on a card about her favorite food",
+                        vocabFocus: "write, favorite, food, love",
+                        narrative: "In the afternoon, Fiela writes about her favorite food for tomorrow's class presentation. She draws a plate of chicken and rice. At the top of the card, she writes: 'My favorite food is chicken.'",
+                        dialog: [
+                            { who: "Fiela", text: "I love chicken. It always makes me happy." }
+                        ],
+                        image: "📝",
+                        interactive: ["📝 Write", "❤️ Love", "⭐ Unit Complete"],
+                        keyPhrase: "My favorite food is chicken"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "Let's Play Outside",
+                emoji: '⚽',
+                vocab: {
+                    "Outdoor": ["yard", "park", "playground", "slide", "swing", "ball", "tree", "grass", "sun", "wind"],
+                    "Actions": ["run", "jump", "climb", "throw", "catch", "kick", "slide", "swing", "chase", "rest"],
+                    "Expressions": ["Let's play!", "Be careful!", "Can I join?", "It's my turn!", "Let's take a break."]
+                },
+                scenes: [
+                    {
+                        id: 1,
+                        title: "A Sunny Afternoon",
+                        setting: "The yard with bright sunshine and green grass",
+                        vocabFocus: "sunny, outside, yard, grass",
+                        narrative: "It is a sunny afternoon. Fiela looks out the window and sees the bright yard. The grass is green, and the wind is gentle. She quickly puts on her shoes.",
+                        dialog: [
+                            { who: "Fiela", text: "Mom, can I play outside?" },
+                            { who: "Mother", text: "Yes, but be careful!" }
+                        ],
+                        image: "☀️",
+                        interactive: ["☀️ Sunny day", "🏡 Yard", "🌱 Grass"],
+                        keyPhrase: "Can I play outside"
+                    },
+                    {
+                        id: 2,
+                        title: "Meeting Friends",
+                        setting: "Front of house with friends standing near a tree",
+                        vocabFocus: "friends, together, play, join",
+                        narrative: "When Fiela steps outside, she sees Dira and two other friends standing near a tree. They wave excitedly when they see her.",
+                        dialog: [
+                            { who: "Friends", text: "Fiela! Let's play!" },
+                            { who: "Fiela", text: "Sure! Can I join?" },
+                            { who: "Friends", text: "Of course!" }
+                        ],
+                        image: "👋",
+                        interactive: ["👋 Wave hello", "👥 Friends", "🤝 Join game"],
+                        keyPhrase: "Can I join"
+                    },
+                    {
+                        id: 3,
+                        title: "Ball Game Time",
+                        setting: "Small field for playing",
+                        vocabFocus: "ball, throw, catch, kick, run",
+                        narrative: "The children start with a simple ball game. Fiela throws the ball to Dira. Dira catches it and kicks it gently to another friend. Everyone laughs and runs across the field.",
+                        dialog: [
+                            { who: "Fiela", text: "Catch this!" },
+                            { who: "Dira", text: "I got it!" }
+                        ],
+                        image: "⚽",
+                        interactive: ["⚽ Ball game", "🎾 Throw", "✋ Catch"],
+                        keyPhrase: "Catch the ball"
+                    },
+                    {
+                        id: 4,
+                        title: "On the Playground",
+                        setting: "Playground with swings and slides",
+                        vocabFocus: "playground, slide, swing, climb, turn",
+                        narrative: "They move to the playground. Fiela climbs up the slide ladder. She slides down fast—whoosh! Her friends take turns on the swing.",
+                        dialog: [
+                            { who: "Fiela", text: "It's fun!" },
+                            { who: "Friend", text: "My turn next!" }
+                        ],
+                        image: "🛝",
+                        interactive: ["🛝 Slide", "🎠 Swing", "🧗 Climb"],
+                        keyPhrase: "It's so much fun"
+                    },
+                    {
+                        id: 5,
+                        title: "A Small Challenge",
+                        setting: "Mini obstacle course with sticks and stones",
+                        vocabFocus: "jump, step, challenge, careful",
+                        narrative: "The children decide to create a small obstacle course using sticks and stones. They jump over small rocks and step carefully between the sticks. Everyone tries to finish without touching the lines.",
+                        dialog: [
+                            { who: "Dira", text: "Be careful!" },
+                            { who: "Fiela", text: "I can do it!" }
+                        ],
+                        image: "🤸",
+                        interactive: ["🤸 Jump", "🏃 Run", "⛰️ Obstacles"],
+                        keyPhrase: "I can do it"
+                    },
+                    {
+                        id: 6,
+                        title: "Windy Moment",
+                        setting: "Wind blowing with falling leaves around the yard",
+                        vocabFocus: "wind, tree, leaves, fly, cool",
+                        narrative: "Suddenly, the wind blows stronger. Leaves fly around the yard like little butterflies. The children look up at the dancing branches.",
+                        dialog: [
+                            { who: "Fiela", text: "Wow! The wind is cool!" },
+                            { who: "Friend", text: "Look at the leaves!" }
+                        ],
+                        image: "🍃",
+                        interactive: ["🍃 Falling leaves", "💨 Wind sound", "🌳 Tree dancing"],
+                        keyPhrase: "The wind is cool"
+                    },
+                    {
+                        id: 7,
+                        title: "Taking a Break",
+                        setting: "Sitting under a large tree for shade",
+                        vocabFocus: "rest, thirsty, water, shade",
+                        narrative: "After running and playing, the children sit under a big tree. The shade feels cool. Fiela drinks water from her bottle. Everyone takes a slow, long breath.",
+                        dialog: [
+                            { who: "Fiela", text: "I'm thirsty." },
+                            { who: "Dira", text: "Here, have some water." }
+                        ],
+                        image: "💧",
+                        interactive: ["💧 Water", "😌 Rest", "🌳 Shade"],
+                        keyPhrase: "I'm thirsty"
+                    },
+                    {
+                        id: 8,
+                        title: "Time to Go Home",
+                        setting: "Sunset with afternoon light fading",
+                        vocabFocus: "tired, happy, home, goodbye",
+                        narrative: "The sun begins to set. The children stand up and wave goodbye to each other. Fiela feels tired but very happy.",
+                        dialog: [
+                            { who: "Friends", text: "See you tomorrow!" },
+                            { who: "Fiela", text: "See you!" }
+                        ],
+                        image: "🌅",
+                        interactive: ["👋 Goodbye wave", "🌅 Sunset", "⭐ Unit Complete"],
+                        keyPhrase: "See you tomorrow"
+                    }
+                ]
+            }
+        ];
 
-        // For brevity in this snippet, re-include the full units data:
-        // (Paste the full units array content from the original code here)
-        // --- BEGIN UNITS DATA ---
-        /* (The full units array exactly as in the original file goes here) */
-        // --- END UNITS DATA ---
-        // To keep this sample concise, ensure you copy the earlier units array into this spot.
-
-        // RENDER (uses units)
+        // Render units
         const unitsGrid = document.getElementById('unitsGrid');
-
-        function createUnitCard(unit){
-            const el = document.createElement('article');
-            el.className = 'unit';
-            const avatar = unitEmoji[unit.id] || '📘';
-            el.innerHTML = `
-                <div class="unit-top">
-                    <div class="avatar">${avatar}</div>
-                    <div>
-                        <h2>${unit.title}</h2>
-                        <div class="meta">8 Scenes • Cerita & latihan interaktif</div>
-                    </div>
-                </div>
-                <div class="vocab" style="margin-top:10px">
-                    <strong>Target kosakata</strong>
-                    <div style="margin-top:8px" class="vocab-list"></div>
-                </div>
-
-                <div style="margin-top:10px">
-                    <div class="scenes" id="scenes-${unit.id}"></div>
-                </div>
-
-                <div class="footer">
-                    <small>Interaktif • Dialog mudah dimengerti</small>
-                    <div><button data-unit="${unit.id}" class="scene-btn open-vocab">📖 Buka kosakata</button></div>
-                </div>
-            `;
-            // fill vocab list
-            const vwrap = el.querySelector('.vocab-list');
-            Object.keys(unit.vocab).forEach(k=>{
-                const items = unit.vocab[k].slice(0,6).join(', ');
-                const div = document.createElement('div');
-                div.style.fontSize='13px';
-                div.innerHTML = `<em style="color:var(--accent)">${k.replace(/([A-Z])/g,' $1')}</em>: ${items}${unit.vocab[k].length>6?'…':''}`;
-                vwrap.appendChild(div);
-            });
-
-            // scenes
-            const scenesWrap = el.querySelector(`#scenes-${unit.id}`);
-            unit.scenes.forEach(scene=>{
-                const btn = document.createElement('button');
-                btn.className = 'scene-btn';
-                btn.innerHTML = `<span class="emoji">${avatar}</span><span>${scene.id}. ${scene.title}</span>`;
-                btn.dataset.unit = unit.id;
-                btn.dataset.scene = scene.id;
-                scenesWrap.appendChild(btn);
-            });
-            return el;
-        }
-
-        // append all units
-        units.forEach(u=> unitsGrid.appendChild(createUnitCard(u)));
-
-        // Modal handling + navigation
-        const backdrop = document.getElementById('modalBackdrop');
+        const modalBackdrop = document.getElementById('modalBackdrop');
         const modalTitle = document.getElementById('modalTitle');
         const modalSetting = document.getElementById('modalSetting');
         const modalVocab = document.getElementById('modalVocab');
         const modalNarrative = document.getElementById('modalNarrative');
         const modalDialog = document.getElementById('modalDialog');
-        const modalInteractive = document.getElementById('modalInteractive');
-        const closeModalBtn = document.getElementById('closeModal');
-        const vocabListBtn = document.getElementById('vocabListBtn');
-        const prevBtn = document.getElementById('prevScene');
-        const nextBtn = document.getElementById('nextScene');
+        const sceneImage = document.getElementById('sceneImage');
+        const progressFill = document.getElementById('progressFill');
+        const interactiveButtons = document.getElementById('interactiveButtons');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const vocabBtn = document.getElementById('vocabBtn');
+        const closeModal = document.getElementById('closeModal');
+        const searchInput = document.getElementById('searchInput');
 
         let currentUnitId = null;
         let currentSceneIndex = null;
 
-        function openScene(unitId, sceneId){
-            const unit = units.find(u=>u.id==unitId);
-            if(!unit) return;
-            const scene = unit.scenes.find(s=>s.id==sceneId);
-            if(!scene) return;
-            currentUnitId = unitId;
-            currentSceneIndex = unit.scenes.findIndex(s=>s.id==sceneId);
-            modalTitle.textContent = `${unit.title} — Adegan ${scene.id}: ${scene.title}`;
-            modalSetting.textContent = scene.setting || '';
-            modalVocab.textContent = scene.vocabFocus || '';
-            modalNarrative.textContent = scene.narrative + (scene.narrative2 ? ("\n\n" + scene.narrative2) : "");
-            modalInteractive.textContent = scene.interactive || '';
+        function renderUnits() {
+            unitsGrid.innerHTML = '';
+            units.forEach(unit => {
+                const card = document.createElement('article');
+                card.className = 'unit';
+                card.innerHTML = `
+                    <div class="unit-header">
+                        <div class="unit-avatar">${unit.emoji}</div>
+                        <div>
+                            <h2>${unit.title}</h2>
+                            <div class="meta">8 interactive scenes</div>
+                        </div>
+                    </div>
+                    <div class="vocab-preview">
+                        <strong>📚 Key Vocabulary</strong>
+                        <div style="margin-top:6px; font-size:12px;">
+                            ${Object.keys(unit.vocab).map(cat => `<em style="color: var(--accent)">${cat}:</em> ${unit.vocab[cat].slice(0, 4).join(', ')}...`).join('<br>')}
+                        </div>
+                    </div>
+                    <div class="scenes-list" id="scenes-${unit.id}"></div>
+                `;
+                unitsGrid.appendChild(card);
 
-            // dialog rendering as bubbles
-            modalDialog.innerHTML = '';
-            (scene.dialog || []).forEach(d=>{
-                const b = document.createElement('div');
-                const whoClass = (d.who && d.who.toLowerCase().includes('fiela')) ? 'me' : 'them';
-                b.className = 'bubble ' + whoClass;
-                b.innerHTML = `<span class="who">${d.who}</span><span class="text">${d.text}</span>`;
-                modalDialog.appendChild(b);
+                const scenesList = card.querySelector(`#scenes-${unit.id}`);
+                unit.scenes.forEach(scene => {
+                    const btn = document.createElement('button');
+                    btn.className = 'scene-btn';
+                    btn.innerHTML = `<span class="scene-emoji">${unit.emoji}</span> <span class="scene-title">Scene ${scene.id}: ${scene.title}</span>`;
+                    btn.addEventListener('click', () => openScene(unit.id, scene.id));
+                    scenesList.appendChild(btn);
+                });
             });
-
-            // show/hide prev/next
-            prevBtn.setAttribute('aria-disabled', currentSceneIndex<=0);
-            nextBtn.setAttribute('aria-disabled', currentSceneIndex>= (unit.scenes.length-1));
-
-            backdrop.style.display = 'flex';
-            backdrop.setAttribute('aria-hidden','false');
-
-            // attach quick vocab button dataset
-            vocabListBtn.dataset.unit = unitId;
-
-            // focus for keyboard control
-            closeModalBtn.focus();
         }
 
-        // event delegation for scene buttons
-        unitsGrid.addEventListener('click', (ev)=>{
-            const btn = ev.target.closest('button');
-            if(!btn) return;
-            const u = btn.dataset.unit;
-            const s = btn.dataset.scene;
-            if(s) openScene(Number(u), Number(s));
-            if(btn.classList.contains('open-vocab')){
-                const uid = Number(btn.dataset.unit);
-                showVocab(uid);
-            }
-        });
+        function openScene(unitId, sceneId) {
+            const unit = units.find(u => u.id === unitId);
+            const sceneIndex = unit.scenes.findIndex(s => s.id === sceneId);
+            const scene = unit.scenes[sceneIndex];
 
-        // close modal
-        function closeModal(){
-            backdrop.style.display = 'none';
-            backdrop.setAttribute('aria-hidden','true');
+            currentUnitId = unitId;
+            currentSceneIndex = sceneIndex;
+
+            modalTitle.textContent = `${unit.title} — Scene ${scene.id}: ${scene.title}`;
+            modalSetting.textContent = scene.setting;
+            modalVocab.textContent = scene.vocabFocus;
+            modalNarrative.textContent = scene.narrative;
+            sceneImage.textContent = scene.image;
+            sceneImage.style.fontSize = '120px';
+
+            // Progress
+            const progress = ((sceneIndex + 1) / unit.scenes.length) * 100;
+            progressFill.style.width = progress + '%';
+
+            // Dialog
+            modalDialog.innerHTML = '';
+            scene.dialog.forEach(d => {
+                const bubble = document.createElement('div');
+                const isFiela = d.who.toLowerCase().includes('fiela');
+                bubble.className = `bubble ${isFiela ? 'fiela' : 'other'}`;
+                bubble.innerHTML = `<div class="bubble-who">${d.who}</div><div>${d.text}</div>`;
+                modalDialog.appendChild(bubble);
+            });
+
+            // Interactive buttons
+            interactiveButtons.innerHTML = '';
+            scene.interactive.forEach(action => {
+                const btn = document.createElement('button');
+                btn.className = 'interactive-btn';
+                btn.textContent = action;
+                btn.addEventListener('click', () => showInteraction(action));
+                interactiveButtons.appendChild(btn);
+            });
+
+            // Navigation
+            prevBtn.disabled = sceneIndex === 0;
+            nextBtn.disabled = sceneIndex === unit.scenes.length - 1;
+
+            // Vocab button
+            vocabBtn.dataset.unitId = unitId;
+
+            modalBackdrop.classList.add('active');
+        }
+
+        function showInteraction(action) {
+            alert(`✨ ${action} - Interactive feature engaged!`);
+        }
+
+        function closeSceneModal() {
+            modalBackdrop.classList.remove('active');
             currentUnitId = null;
             currentSceneIndex = null;
         }
-        closeModalBtn.addEventListener('click', closeModal);
-        backdrop.addEventListener('click', (ev)=>{
-            if(ev.target === backdrop) closeModal();
+
+        // Event listeners
+        closeModal.addEventListener('click', closeSceneModal);
+        modalBackdrop.addEventListener('click', (e) => {
+            if (e.target === modalBackdrop) closeSceneModal();
         });
 
-        // prev/next
-        prevBtn.addEventListener('click', ()=>{
-            if(currentUnitId==null) return;
-            const unit = units.find(u=>u.id==currentUnitId);
-            if(currentSceneIndex>0){
-                const nextIdx = currentSceneIndex-1;
-                openScene(currentUnitId, unit.scenes[nextIdx].id);
-            }
-        });
-        nextBtn.addEventListener('click', ()=>{
-            if(currentUnitId==null) return;
-            const unit = units.find(u=>u.id==currentUnitId);
-            if(currentSceneIndex < unit.scenes.length-1){
-                const nextIdx = currentSceneIndex+1;
-                openScene(currentUnitId, unit.scenes[nextIdx].id);
+        prevBtn.addEventListener('click', () => {
+            if (currentSceneIndex > 0) {
+                const unit = units.find(u => u.id === currentUnitId);
+                openScene(currentUnitId, unit.scenes[currentSceneIndex - 1].id);
             }
         });
 
-        // search (friendly)
-        const searchInput = document.getElementById('search');
-        searchInput.addEventListener('input', (ev)=>{
-            const q = ev.target.value.trim().toLowerCase();
-            document.querySelectorAll('.unit').forEach((card, idx)=>{
-                const u = units[idx];
-                const hay = (u.title + ' ' + JSON.stringify(u)).toLowerCase();
-                card.style.display = q && !hay.includes(q) ? 'none' : '';
+        nextBtn.addEventListener('click', () => {
+            if (currentSceneIndex < units.find(u => u.id === currentUnitId).scenes.length - 1) {
+                const unit = units.find(u => u.id === currentUnitId);
+                openScene(currentUnitId, unit.scenes[currentSceneIndex + 1].id);
+            }
+        });
+
+        vocabBtn.addEventListener('click', () => {
+            const unitId = Number(vocabBtn.dataset.unitId);
+            const unit = units.find(u => u.id === unitId);
+            let vocabText = `<strong>${unit.title} — Full Vocabulary List</strong>\n\n`;
+            Object.keys(unit.vocab).forEach(cat => {
+                vocabText += `${cat}:\n${unit.vocab[cat].join(', ')}\n\n`;
+            });
+            alert(vocabText);
+        });
+
+        // Search
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.unit');
+            cards.forEach((card, idx) => {
+                const unit = units[idx];
+                const text = (unit.title + ' ' + JSON.stringify(unit.vocab)).toLowerCase();
+                card.style.display = text.includes(query) ? '' : 'none';
             });
         });
 
-        // vocab display (quick modal variant)
-        function showVocab(unitId){
-            const unit = units.find(u=>u.id==unitId);
-            if(!unit) return;
-            const lines = [];
-            for(const k of Object.keys(unit.vocab)){
-                lines.push(`<strong>${k}:</strong> ${unit.vocab[k].join(', ')}`);
-            }
-            modalTitle.textContent = `${unit.title} — Kosakata`;
-            modalSetting.textContent = '';
-            modalVocab.textContent = '';
-            modalNarrative.innerHTML = lines.join('<br>');
-            modalDialog.innerHTML = '';
-            modalInteractive.textContent = 'Ketuk adegan untuk melihat konteks dan dialog.';
-            backdrop.style.display = 'flex';
-            backdrop.setAttribute('aria-hidden','false');
-        }
-
-        // modal quick buttons (audio placeholder & open vocabulary)
-        document.getElementById('playAudio').addEventListener('click', ()=>{
-            alert('🔊 Contoh audio — ganti dengan aset audio nyata untuk tiap adegan.');
-        });
-        vocabListBtn.addEventListener('click', (ev)=>{
-            const uid = Number(ev.target.dataset.unit);
-            if(uid) showVocab(uid);
-        });
-
-        // keyboard shortcuts: Esc to close, left/right to navigate scenes
-        document.addEventListener('keydown', (ev)=>{
-            if(backdrop.style.display !== 'flex') return;
-            if(ev.key === 'Escape') closeModal();
-            if(ev.key === 'ArrowLeft') prevBtn.click();
-            if(ev.key === 'ArrowRight') nextBtn.click();
-        });
-
-        // small accessibility: focus trap minimal (close on tab out of last control)
-        // (for production, consider a full focus trap)
+        // Initialize
+        renderUnits();
     </script>
 </body>
 </html>
-<script>
-(function(){
-    // Replace page text to English
-    const setText = (sel, text) => {
-        const el = document.querySelector(sel);
-        if(el) el.textContent = text;
-    };
-    setText('header h1', 'FIELA — Units (Kids) — Fun, Friendly, and Interactive');
-    const headerSmall = document.querySelector('header small');
-    if(headerSmall) headerSmall.textContent = '5 Units • 8 Scenes each — Interactive stories for Grade 4';
-    const searchInput = document.getElementById('search');
-    if(searchInput){
-        searchInput.placeholder = "Search units, scenes, or words (e.g. 'toothbrush')";
-    }
-    const badge = document.querySelector('.badge');
-    if(badge) badge.textContent = 'Level 4';
-
-    // Provide a full-English units dataset and attach to global `units`
-    window.units = [
-        {
-            id: 1, title: "Morning Fun",
-            vocab: { Everyday: ["wake up","brush","toothbrush","bed"], Actions: ["smile","stretch","run"] },
-            scenes: [
-                { id:1, title:"Wake Up!", setting:"Bedroom", vocabFocus:"wake up",
-                    narrative:"Fiela wakes up excited for a new day.",
-                    dialog:[{who:"Fiela",text:"Good morning! I slept well."},{who:"Mom",text:"Time to get up, sweetheart."}],
-                    illustration:"assets/units/1/scene1.jpg", audio:"assets/units/1/scene1.mp3", interactive:"Sing the morning song", keyPhrase:"Good morning"
-                },
-                { id:2, title:"Brush Time", setting:"Bathroom", vocabFocus:"toothbrush",
-                    narrative:"Fiela learns how to brush properly.",
-                    dialog:[{who:"Fiela",text:"I can brush by myself!"},{who:"Mom",text:"Nice, remember two minutes."}],
-                    illustration:"assets/units/1/scene2.jpg", audio:"assets/units/1/scene2.mp3", interactive:"Practice brushing motion", keyPhrase:"I can brush by myself"
-                }
-            ]
-        },
-        {
-            id: 2, title: "At Home",
-            vocab: { Rooms: ["kitchen","living room","bedroom"], Objects: ["table","chair","toy"] },
-            scenes: [
-                { id:1, title:"Breakfast", setting:"Kitchen", vocabFocus:"breakfast",
-                    narrative:"They enjoy cereal and fruit together.",
-                    dialog:[{who:"Dad",text:"Would you like milk?"},{who:"Fiela",text:"Yes, please."}],
-                    illustration:"assets/units/2/scene1.jpg", audio:"assets/units/2/scene1.mp3", interactive:"Choose toppings", keyPhrase:"Yes, please"
-                }
-            ]
-        },
-        {
-            id: 3, title: "School Day",
-            vocab: { School: ["teacher","class","desk"], Subjects: ["math","reading","science"] },
-            scenes: [
-                { id:1, title:"First Class", setting:"Classroom", vocabFocus:"teacher",
-                    narrative:"Fiela meets her new teacher and classmates.",
-                    dialog:[{who:"Teacher",text:"Welcome, class!"},{who:"Fiela",text:"Nice to meet you."}],
-                    illustration:"assets/units/3/scene1.jpg", audio:"assets/units/3/scene1.mp3", interactive:"Greet the teacher", keyPhrase:"Nice to meet you"
-                }
-            ]
-        },
-        {
-            id: 4, title: "Meals & Manners",
-            vocab: { Food: ["rice","soup","vegetables"], Manners: ["please","thank you","excuse me"] },
-            scenes: [
-                { id:1, title:"Lunchtime", setting:"Cafeteria", vocabFocus:"please",
-                    narrative:"They learn to ask kindly for food.",
-                    dialog:[{who:"Friend",text:"Can I have some?"},{who:"Fiela",text:"Please pass the soup."}],
-                    illustration:"assets/units/4/scene1.jpg", audio:"assets/units/4/scene1.mp3", interactive:"Polite request practice", keyPhrase:"Please pass the soup"
-                }
-            ]
-        },
-        {
-            id: 5, title: "Playtime",
-            vocab: { Games: ["ball","goal","team"], Feelings: ["happy","tired","excited"] },
-            scenes: [
-                { id:1, title:"Soccer Match", setting:"Playground", vocabFocus:"goal",
-                    narrative:"A friendly match finishes with a big cheer.",
-                    dialog:[{who:"Coach",text:"Good teamwork!"},{who:"Fiela",text:"We scored a goal!"}],
-                    illustration:"assets/units/5/scene1.jpg", audio:"assets/units/5/scene1.mp3", interactive:"Kick the ball mini-game", keyPhrase:"We scored a goal"
-                }
-            ]
-        }
-    ];
-
-    // Create a unit-selector bar (buttons)
-    const header = document.querySelector('header');
-    if(header){
-        const bar = document.createElement('div');
-        bar.style.display = 'flex';
-        bar.style.gap = '8px';
-        bar.style.marginLeft = '18px';
-        bar.style.flexWrap = 'wrap';
-        bar.setAttribute('aria-hidden','false');
-        window.units.forEach(u=>{
-            const b = document.createElement('button');
-            b.className = 'scene-btn';
-            b.style.minWidth = '120px';
-            b.textContent = `${u.id}. ${u.title}`;
-            b.dataset.unit = u.id;
-            b.addEventListener('click', ()=> {
-                // scroll to units grid and open the first scene of that unit
-                const firstSceneId = (u.scenes && u.scenes[0] && u.scenes[0].id) || 1;
-                const targetBtn = document.querySelector(`#scenes-${u.id} .scene-btn`);
-                // if scene buttons exist, trigger existing logic; otherwise call openScene directly
-                const sceneBtn = document.querySelector(`#scenes-${u.id} .scene-btn`);
-                if(sceneBtn){
-                    sceneBtn.click();
-                } else {
-                    if(typeof openScene === 'function') openScene(u.id, firstSceneId);
-                }
-            });
-            bar.appendChild(b);
-        });
-        header.appendChild(bar);
-    }
-
-    // Re-render units grid using existing createUnitCard if present
-    const unitsGrid = document.getElementById('unitsGrid');
-    if(unitsGrid && typeof createUnitCard === 'function'){
-        unitsGrid.innerHTML = '';
-        window.units.forEach(u => unitsGrid.appendChild(createUnitCard(u)));
-    }
-
-    // Add extra modal areas: illustration, animation toggle, dictionary popup, pronunciation UI, audio player
-    const backdrop = document.getElementById('modalBackdrop');
-    const sceneModal = document.getElementById('sceneModal');
-
-    // inject styles for illustration and popup
-    const style = document.createElement('style');
-    style.textContent = `
-        .scene-illustration{width:100%;max-height:260px;object-fit:cover;border-radius:10px;margin:8px 0;display:block}
-        .illustration-anim{transition:transform .6s ease}
-        .wiggle{transform:rotate(-2deg) scale(1.02)}
-        .dict-popup{position:fixed;right:18px;top:18px;background:var(--card);padding:12px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.12);display:none;z-index:1300;max-width:320px}
-        .pronounce-panel{display:flex;gap:8px;align-items:center;margin-left:auto}
-        .pronounce-result{font-weight:700;color:var(--accent);margin-left:8px}
-    `;
-    document.head.appendChild(style);
-
-    // create popup container
-    let dictPopup = document.querySelector('.dict-popup');
-    if(!dictPopup){
-        dictPopup = document.createElement('div');
-        dictPopup.className = 'dict-popup';
-        dictPopup.id = 'dictPopup';
-        dictPopup.innerHTML = `<strong>Dictionary</strong><div id="dictContent" style="margin-top:8px;font-size:14px"></div><div style="margin-top:8px;text-align:right"><button id="closeDict" class="close">Close</button></div>`;
-        document.body.appendChild(dictPopup);
-        document.getElementById('closeDict').addEventListener('click', ()=> dictPopup.style.display='none');
-    }
-
-    // create illustration & controls if not present
-    let illustration = sceneModal.querySelector('.scene-illustration');
-    if(!illustration){
-        illustration = document.createElement('img');
-        illustration.className = 'scene-illustration illustration-anim';
-        illustration.alt = 'Scene illustration';
-        sceneModal.insertBefore(illustration, sceneModal.querySelector('.dialog-wrap'));
-    }
-
-    // audio player element
-    let audioPlayer = sceneModal.querySelector('audio.scene-audio');
-    if(!audioPlayer){
-        audioPlayer = document.createElement('audio');
-        audioPlayer.className = 'scene-audio';
-        audioPlayer.controls = true;
-        audioPlayer.style.width = '100%';
-        sceneModal.insertBefore(audioPlayer, sceneModal.querySelector('.dialog-wrap'));
-    }
-
-    // add animation and dictionary & pronunciation controls into dialog controls area
-    const controls = sceneModal.querySelector('.controls');
-    if(controls){
-        // animation toggle
-        let animBtn = controls.querySelector('.anim-toggle');
-        if(!animBtn){
-            animBtn = document.createElement('button');
-            animBtn.className = 'scene-btn anim-toggle';
-            animBtn.type = 'button';
-            animBtn.textContent = '✨ Animate';
-            controls.insertBefore(animBtn, controls.firstChild);
-        }
-        // popup dictionary
-        let dictBtn = controls.querySelector('.dict-toggle');
-        if(!dictBtn){
-            dictBtn = document.createElement('button');
-            dictBtn.className = 'scene-btn dict-toggle';
-            dictBtn.type = 'button';
-            dictBtn.textContent = '📘 Dictionary';
-            controls.insertBefore(dictBtn, controls.firstChild);
-        }
-        // pronunciation panel
-        let pronPanel = controls.querySelector('.pronounce-panel');
-        if(!pronPanel){
-            pronPanel = document.createElement('div');
-            pronPanel.className = 'pronounce-panel';
-            pronPanel.innerHTML = `<button id="startPronounce" class="scene-btn">🎙️ Pronounce</button><span id="pronounceScore" class="pronounce-result"></span>`;
-            controls.appendChild(pronPanel);
-        }
-
-        // animation toggle logic
-        animBtn.addEventListener('click', ()=>{
-            illustration.classList.toggle('wiggle');
-        });
-
-        // dictionary toggle logic
-        dictBtn.addEventListener('click', (ev)=>{
-            const unitId = vocabListBtn.dataset.unit ? Number(vocabListBtn.dataset.unit) : currentUnitId;
-            const unit = window.units.find(u=>u.id===unitId);
-            const div = document.getElementById('dictContent');
-            if(unit && div){
-                div.innerHTML = '';
-                Object.keys(unit.vocab).forEach(k=>{
-                    const row = document.createElement('div');
-                    row.innerHTML = `<em style="color:var(--accent)">${k}</em>: ${unit.vocab[k].join(', ')}`;
-                    div.appendChild(row);
-                });
-                dictPopup.style.display = 'block';
-            }
-        });
-    }
-
-    // Pronunciation feedback using Web Speech API (fallback message if not supported)
-    const startPronounceBtn = () => document.getElementById('startPronounce');
-    let recognition = null;
-    if(window.webkitSpeechRecognition || window.SpeechRecognition){
-        const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new Rec();
-        recognition.lang = 'en-US';
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
-    }
-
-    const levenshtein = (a,b) => {
-        if(!a) return b.length;
-        if(!b) return a.length;
-        const m = a.length, n = b.length;
-        const dp = Array.from({length:m+1},()=>new Array(n+1).fill(0));
-        for(let i=0;i<=m;i++) dp[i][0]=i;
-        for(let j=0;j<=n;j++) dp[0][j]=j;
-        for(let i=1;i<=m;i++){
-            for(let j=1;j<=n;j++){
-                const cost = a[i-1]===b[j-1] ? 0 : 1;
-                dp[i][j] = Math.min(dp[i-1][j]+1, dp[i][j-1]+1, dp[i-1][j-1]+cost);
-            }
-        }
-        return dp[m][n];
-    };
-
-    const startPronunciationSession = (expectedPhrase) => {
-        const scoreEl = document.getElementById('pronounceScore');
-        if(!recognition){
-            alert('Pronunciation feedback requires a modern browser with Speech Recognition support.');
-            return;
-        }
-        scoreEl.textContent = 'Listening…';
-        recognition.onresult = function(ev){
-            const transcript = ev.results[0][0].transcript || '';
-            const distance = levenshtein(transcript.toLowerCase(), expectedPhrase.toLowerCase());
-            const maxLen = Math.max(transcript.length, expectedPhrase.length);
-            const similarity = Math.max(0, Math.round((1 - (distance / maxLen)) * 100));
-            scoreEl.textContent = `You: "${transcript}" → ${similarity}%`;
-        };
-        recognition.onerror = function(){
-            scoreEl.textContent = 'Try again';
-        };
-        recognition.start();
-    };
-
-    // Hook pronunciation button
-    const pronButton = startPronounceBtn();
-    if(pronButton){
-        pronButton.addEventListener('click', ()=>{
-            // expected phrase comes from modalInteractive keyPhrase stored on open
-            const expected = pronButton.dataset.expected || '';
-            if(!expected) {
-                alert('Speak the key phrase shown in the scene (the expected phrase is not set).');
-                return;
-            }
-            startPronunciationSession(expected);
-        });
-    }
-
-    // Wrap original openScene to inject extras (keep existing behavior then enhance)
-    if(typeof openScene === 'function'){
-        const originalOpen = openScene;
-        window.openScene = function(unitId, sceneId){
-            originalOpen(unitId, sceneId);
-            try {
-                const unit = window.units.find(u=>u.id==unitId);
-                const scene = unit && unit.scenes.find(s=>s.id==sceneId);
-                // illustration
-                if(scene && scene.illustration){
-                    illustration.src = scene.illustration;
-                    illustration.alt = `${scene.title} illustration`;
-                } else {
-                    illustration.src = '';
-                    illustration.alt = 'No illustration';
-                }
-                // audio
-                if(scene && scene.audio){
-                    audioPlayer.src = scene.audio;
-                    audioPlayer.style.display = 'block';
-                } else {
-                    audioPlayer.src = '';
-                    audioPlayer.style.display = 'none';
-                }
-                // pronunciation expected phrase saved on button
-                const pbtn = document.getElementById('startPronounce');
-                if(pbtn){
-                    pbtn.dataset.expected = scene && scene.keyPhrase ? scene.keyPhrase : (scene && scene.vocabFocus ? scene.vocabFocus : '');
-                    document.getElementById('pronounceScore').textContent = '';
-                }
-                // animated reset
-                illustration.classList.remove('wiggle');
-
-                // set interactive note
-                modalInteractive.textContent = scene && scene.interactive ? scene.interactive : 'Tap a scene to see interactive options';
-
-            } catch(e){
-                console.error(e);
-            }
-        };
-    }
-
-    // Small accessibility: close dict popup when modal closes
-    const closeModalBtn = document.getElementById('closeModal');
-    if(closeModalBtn){
-        closeModalBtn.addEventListener('click', ()=> { dictPopup.style.display='none'; });
-    }
-    backdrop.addEventListener('click', (ev)=>{
-        if(ev.target === backdrop) dictPopup.style.display='none';
-    });
-
-    // Ensure vocabListBtn exists globally
-    const vocabListBtn = document.getElementById('vocabListBtn');
-    if(vocabListBtn) vocabListBtn.title = 'Open full unit vocabulary';
-
-    // Final: if there are no scene buttons because createUnitCard was not loaded earlier, create a simple units view
-    if(!document.querySelector('.unit') && unitsGrid){
-        unitsGrid.innerHTML = '';
-        window.units.forEach(unit=>{
-            const wrap = document.createElement('div');
-            wrap.className = 'unit';
-            wrap.style.padding = '12px';
-            wrap.innerHTML = `<h2 style="margin:0">${unit.title}</h2><p class="meta">Scenes: ${unit.scenes.length}</p>`;
-            const openBtn = document.createElement('button');
-            openBtn.className = 'scene-btn';
-            openBtn.textContent = 'Open first scene';
-            openBtn.addEventListener('click', ()=> openScene(unit.id, unit.scenes[0].id));
-            wrap.appendChild(openBtn);
-            unitsGrid.appendChild(wrap);
-        });
-    }
-
-})();
-</script>
