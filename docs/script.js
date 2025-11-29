@@ -45,11 +45,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 	// expose startLearning globally and make it navigate to units page
 	window.startLearning = function() {
-		// try to navigate to units page; fallback to alert
-		const unitsPath = 'fiela/units.html';
-		if (location.pathname.endsWith('/')) {
-			// relative navigation
-		}
+		// navigate to units page in same folder
+		const unitsPath = 'units.html';
 		try {
 			location.href = unitsPath;
 		} catch (e) {
