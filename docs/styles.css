@@ -79,6 +79,11 @@ body {
     font-weight: 900;
 }
 
+.hero-text-description {
+    color: #4a148c;       /* dark purple */
+    font-weight: 500;     /* slightly medium weight */
+}
+
 .hero-content > p:nth-child(2) {
     font-size: 1.9em;
     color: #6B5AFF;

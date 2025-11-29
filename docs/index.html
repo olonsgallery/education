@@ -11,7 +11,7 @@
 <body>
 	<header class="header">
 		<div class="logo">🌟 FIELA</div>
-		<nav class="nav">
+		<nav class="nav" role="navigation">
 			<a href="#home">🏠 Home</a>
 			<a href="#features">⭐ Features</a>
 			<a href="#get-started">🚀 Start</a>
@@ -22,15 +22,17 @@
 	<section class="hero">
 		<div class="hero-content">
 			<h1>Welcome to FIELA! 🎉</h1>
-			<p>Fun and Interactive English Learning Atlas</p>
+			<p class="hero-text-description">Fun and Interactive English Learning Atlas</p>
 			<p class="subtitle">Learn English vocabulary and pronunciation in a super fun way! 🎊🌈</p>
-			<button class="cta-button big-btn" onclick="startLearning()">🚀 Start Learning Now</button>
+			<button class="cta-button big-btn" onclick="startLearning()" aria-label="Start Learning Now">🚀 Start Learning Now</button>
 		</div>
 		<div class="hero-illustration">
 			<!-- External SVG illustration from unDraw -->
-			<svg viewBox="0 0 500 500" class="hero-svg">
+			<svg viewBox="0 0 500 500" class="hero-svg" aria-hidden="true" focusable="false">
 				<image href="https://illustrations.co/static/undraw/undraw_online_learning_b44d.svg" width="500" height="500"/>
 			</svg>
+			<!-- Fallback image for browsers or accessibility -->
+			<img src="https://illustrations.co/static/undraw/undraw_online_learning_b44d.svg" alt="Children learning online illustration" class="hero-img" loading="lazy" style="display:block;max-width:100%;height:auto;">
 			<!-- Fallback floating shapes if image fails -->
 			<div class="floating-shapes" style="display:none;">
 				<div class="shape shape-1">A</div>
